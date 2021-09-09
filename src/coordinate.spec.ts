@@ -37,3 +37,18 @@ describe('When creating a new coordinate', () => {
     }).toThrow();
   });
 });
+
+describe('When comparing two instances', () => {
+  const testValue = 4;
+  const testCoordinate = new Coordinate(testValue);
+  const sameCoordinate = new Coordinate(testValue);
+  const differentCoordinate = new Coordinate(testValue + 1);
+
+  it('should consider same values as equal coordinates', () => {
+    expect(testCoordinate).toEqual(sameCoordinate);
+  });
+
+  it('should consider different values as unequal coordinates', () => {
+    expect(testCoordinate).not.toEqual(differentCoordinate);
+  });
+});
