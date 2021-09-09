@@ -17,4 +17,12 @@ export class Point {
   get Y(): number {
     return this.y.Value;
   }
+
+  equals(other: Point): boolean {
+    return this.X === other.X && this.Y === other.Y;
+  }
+
+  toIdString(): string {
+    return `${this.X},${this.Y}`;
+  }
 }
