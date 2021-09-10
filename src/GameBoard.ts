@@ -99,6 +99,16 @@ export class GameBoard {
       );
     }
 
+    if (atomCount > dimensionX * dimensionY) {
+      errors.push(
+        new Error(
+          `atomCount cannot exceed count of cells (${
+            dimensionX * dimensionY
+          }) but was ${atomCount}`,
+        ),
+      );
+    }
+
     return errors;
   }
 }

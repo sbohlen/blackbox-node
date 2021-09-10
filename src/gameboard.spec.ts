@@ -19,4 +19,11 @@ describe('When creating GameBoard', () => {
       new GameBoard(invalidDimension, invalidDimension, invalidAtomCount);
     }).toThrow();
   });
+
+  it('should reject count of atoms that exceeds count of cells', () => {
+    expect(() => {
+      // eslint-disable-next-line no-new
+      new GameBoard(validDimension, validDimension, validDimension ** 2 + 1);
+    }).toThrow();
+  });
 });
