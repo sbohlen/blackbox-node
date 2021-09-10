@@ -30,6 +30,18 @@ export class GameBoard {
   ): Array<Error> {
     const errors = new Array<Error>();
 
+    if (!notNullOrUndefined(dimensionX)) {
+      errors.push(new Error('dimensionX cannot be null or undefined'));
+    }
+
+    if (!notNullOrUndefined(dimensionY)) {
+      errors.push(new Error('dimensionY cannot be null or undefined'));
+    }
+
+    if (!notNullOrUndefined(atomCount)) {
+      errors.push(new Error('atomCount cannot be null or undefined'));
+    }
+
     if (!Number.isInteger(dimensionX)) {
       errors.push(
         new Error(`dimensionX must be an integer but was ${dimensionX}`),
