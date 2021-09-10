@@ -1,6 +1,6 @@
 import { buildGrid } from './buildGrid';
 import { Cell } from './Cell';
-import { hasValue } from './hasValue';
+import { notNullOrUndefined } from './notNullOrUndefined';
 
 export class GameBoard {
   readonly #grid: Map<string, Cell>;
@@ -16,7 +16,7 @@ export class GameBoard {
       atomCount,
     );
 
-    if (hasValue(validationErrors) && validationErrors.length > 0) {
+    if (notNullOrUndefined(validationErrors) && validationErrors.length > 0) {
       throw new Error(validationErrors.join(', '));
     }
 
