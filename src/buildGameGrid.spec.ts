@@ -1,11 +1,11 @@
-import { buildGrid } from './buildGrid';
+import { buildGameGrid } from './buildGameGrid';
 
-describe('When building grid', () => {
+describe('When building GameGrid', () => {
   const dimensionX = 5;
   const dimensionY = 10;
   const atomCount = 3;
 
-  const grid = buildGrid(dimensionX, dimensionY, atomCount);
+  const grid = buildGameGrid(dimensionX, dimensionY, atomCount);
 
   it('should create expected count of cells', () => {
     expect([...grid.values()].length).toEqual(dimensionX * dimensionY);

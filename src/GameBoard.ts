@@ -1,12 +1,20 @@
-import { buildGrid } from './buildGrid';
+import { buildGameGrid } from './buildGameGrid';
+import { buildGridAnnotations } from './buildGridAnnotations';
 import { GameGrid } from './GameGrid';
+import { GridAnnotations } from './GridAnnotations';
 import { notNullOrUndefined } from './notNullOrUndefined';
 
 export class GameBoard {
-  readonly #grid: GameGrid;
+  readonly #gameGrid: GameGrid;
 
-  get Grid() {
-    return this.#grid;
+  readonly #gridAnnotations: GridAnnotations;
+
+  get GameGrid() {
+    return this.#gameGrid;
+  }
+
+  get GridAnnotations() {
+    return this.#gridAnnotations;
   }
 
   constructor(dimensionX: number, dimensionY: number, atomCount: number) {
@@ -20,7 +28,8 @@ export class GameBoard {
       throw new Error(validationErrors.join(', '));
     }
 
-    this.#grid = buildGrid(dimensionX, dimensionY, atomCount);
+    this.#gameGrid = buildGameGrid(dimensionX, dimensionY, atomCount);
+    this.#gridAnnotations = buildGridAnnotations(dimensionX, dimensionY);
   }
 
   static #validateArgs(
