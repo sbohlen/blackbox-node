@@ -4,6 +4,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.+(ts|tsx)', '**/?(*.)+(spec|test).+(ts|tsx)'],
+  watchPathIgnorePatterns: ['.git'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
