@@ -1,9 +1,9 @@
 import { buildGrid } from './buildGrid';
-import { Cell } from './Cell';
+import { GameGrid } from './GameGrid';
 import { notNullOrUndefined } from './notNullOrUndefined';
 
 export class GameBoard {
-  readonly #grid: Map<string, Cell>;
+  readonly #grid: GameGrid;
 
   get Grid() {
     return this.#grid;

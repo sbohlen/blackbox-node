@@ -1,4 +1,5 @@
 import { Cell } from './Cell';
+import { GameGrid } from './GameGrid';
 import { Point } from './point';
 
 function randomIntFromInterval(min, max) {
@@ -6,12 +7,8 @@ function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export function buildGrid(
-  dimensionX,
-  dimensionY,
-  atomCount,
-): Map<string, Cell> {
-  const grid = new Map<string, Cell>();
+export function buildGrid(dimensionX, dimensionY, atomCount): GameGrid {
+  const grid = new GameGrid();
 
   // build and add all the cells in the map
   for (let xIndex = 0; xIndex < dimensionX; xIndex += 1) {
