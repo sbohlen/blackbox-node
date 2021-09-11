@@ -3,6 +3,7 @@ import { GameGrid } from './GameGrid';
 import { notNullOrUndefined } from './notNullOrUndefined';
 import { Point } from './point';
 import { rotatePoint } from './rotatePoint';
+import { logger } from './logger';
 
 enum Direction {
   Up = 'Up',
@@ -24,6 +25,8 @@ function determineEntryDirection(
   entryPoint: Point,
   gameGrid: GameGrid,
 ): Direction {
+  logger.debug('Determining entry vector direction...');
+
   let entryDirection: Direction;
 
   if (entryPoint.X === gameGrid.minX) {
@@ -37,6 +40,8 @@ function determineEntryDirection(
   } else {
     entryDirection = Direction.Indeterminate;
   }
+
+  logger.debug(`Entry vector direction determined: '${entryDirection}'`);
 
   return entryDirection;
 }
@@ -75,13 +80,16 @@ function getUpperLeftCell(currentPosition: Point, gameGrid: GameGrid): Cell {
  *      entry vector (direction=UP)
  */
 function analyzeCellContext(
-  gameGrid: GameGrid,
   currentCell: Cell,
   leftCell: Cell,
   rightCell: Cell,
   upperLeftCell: Cell,
   upperRightCell: Cell,
 ): CellAnalysisResult {
+  logger.debug(
+    `Analyzing cell '${currentCell.point.toIdString()}' to determine next action...`,
+  );
+
   if (currentCell.hasAtom) {
     return CellAnalysisResult.Hit;
   }
@@ -116,24 +124,40 @@ function analyzeCellContext(
   ) {
     return CellAnalysisResult.MakeLeftTurn;
   }
+
   return CellAnalysisResult.ContinueStraight;
 }
 
 // check whether any of the coords of the point match the coordinate of the bounds of the grid...
 function checkPerimeterReached(point: Point, gameGrid: GameGrid): Boolean {
-  return (
+  logger.debug(
+    `Checking point '${point.toIdString()}' to determine whether perimeter of grid has been reached.`,
+  );
+
+  const result =
     point.X === gameGrid.minX ||
     point.X === gameGrid.maxX ||
     point.Y === gameGrid.minY ||
-    point.Y === gameGrid.maxY
-  );
+    point.Y === gameGrid.maxY;
+
+  logger.debug(`Perimeter check for point '${point.toIdString()}': ${result}`);
+
+  return result;
 }
 
 function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
+  logger.debug(`Tracing ray from point: '${currentPosition.toIdString()}'`);
+
+  const currentCell = gameGrid.get(currentPosition.toIdString());
+  const originalPosition = currentPosition;
+
   // test for a hit on an atom
-  if (gameGrid.get(currentPosition.toIdString()).hasAtom) {
+  if (currentCell.hasAtom) {
+    logger.debug(
+      `Current position '${currentPosition.toIdString()}' has atom:TRUE, aborting further analysis.`,
+    );
     // immediately return if found b/c no point in further processing
-    return { hasAtom: true };
+    return { hasAtom: true, finalPoint: originalPosition };
   }
 
   const leftCell = getLeftCell(currentPosition, gameGrid);
@@ -141,20 +165,18 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
   const upperLeftCell = getUpperLeftCell(currentPosition, gameGrid);
   const upperRightCell = getUpperRightCell(currentPosition, gameGrid);
 
-  const currentCell = gameGrid.get(currentPosition.toIdString());
-
-  let reachedPerimeter: boolean = false;
-
-  const originalPosition = currentPosition;
-
-  while (!reachedPerimeter) {
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
     const analysisResult: CellAnalysisResult = analyzeCellContext(
-      gameGrid,
       currentCell,
       leftCell,
       rightCell,
       upperLeftCell,
       upperRightCell,
+    );
+
+    logger.debug(
+      `Analysis of cell '${currentCell.point.toIdString()}' complete, result: '${analysisResult}'`,
     );
 
     const continueStraightTranslation = new Point(
@@ -178,27 +200,35 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
 
       case CellAnalysisResult.ContinueStraight:
         if (checkPerimeterReached(continueStraightTranslation, gameGrid)) {
-          reachedPerimeter = true;
+          logger.debug(
+            `Perimeter reached at position '${continueStraightTranslation.toIdString()}', exiting analysis loop`,
+          );
           return { hasAtom: false, finalPoint: continueStraightTranslation };
         }
         return traceFrom(continueStraightTranslation, gameGrid);
 
       case CellAnalysisResult.MakeLeftTurn:
         if (checkPerimeterReached(makeLeftTurnTranslation, gameGrid)) {
-          reachedPerimeter = true;
+          logger.debug(
+            `Perimeter reached at position '${makeLeftTurnTranslation.toIdString()}', exiting analysis loop`,
+          );
           return { hasAtom: false, finalPoint: makeLeftTurnTranslation };
         }
         return traceFrom(makeLeftTurnTranslation, gameGrid);
 
       case CellAnalysisResult.MakeRightTurn:
         if (checkPerimeterReached(makeRightTurnTranslation, gameGrid)) {
-          reachedPerimeter = true;
+          logger.debug(
+            `Perimeter reached at position '${makeRightTurnTranslation.toIdString()}', exiting analysis loop`,
+          );
           return { hasAtom: false, finalPoint: makeRightTurnTranslation };
         }
         return traceFrom(makeRightTurnTranslation, gameGrid);
 
       case CellAnalysisResult.Reflect:
-        reachedPerimeter = true;
+        logger.debug(
+          `reflection detected at position '${currentPosition.toIdString()}', exiting analysis loop`,
+        );
         return { hasAtom: false, finalPoint: originalPosition };
       default:
         break;
