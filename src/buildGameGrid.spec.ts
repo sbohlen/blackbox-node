@@ -18,4 +18,11 @@ describe('When building GameGrid', () => {
 
     expect(actualAtomCount).toEqual(atomCount);
   });
+
+  it('should report expected min/max X,Y bounds', () => {
+    expect(grid.minX).toEqual(1);
+    expect(grid.maxX).toEqual(dimensionX);
+    expect(grid.minY).toEqual(1);
+    expect(grid.maxY).toEqual(dimensionY);
+  });
 });

@@ -5,9 +5,9 @@ import { GridAnnotations } from './GridAnnotations';
 import { notNullOrUndefined } from './notNullOrUndefined';
 
 export class GameBoard {
-  readonly #gameGrid: GameGrid;
+  #gameGrid: GameGrid;
 
-  readonly #gridAnnotations: GridAnnotations;
+  #gridAnnotations: GridAnnotations;
 
   get GameGrid() {
     return this.#gameGrid;

@@ -10,8 +10,8 @@ describe('When traversing a clear vertical path', () => {
   const rayEntryPoint = new Point(5, 1);
 
   it('should exit on the opposite side of the grid', () => {
-    const rayExitPoint = traceRay(rayEntryPoint, gameGrid);
+    const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
 
-    expect(rayExitPoint).toEqual(new Point(5, 10));
+    expect(rayTraceResult.finalPoint).toEqual(new Point(5, 10));
   });
 });
