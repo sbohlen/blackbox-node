@@ -149,7 +149,6 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
   logger.debug(`Tracing ray from point: '${currentPosition.toIdString()}'`);
 
   const currentCell = gameGrid.get(currentPosition.toIdString());
-  const originalPosition = currentPosition;
 
   // test for a hit on an atom
   if (currentCell.hasAtom) {
@@ -157,7 +156,7 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
       `Current position '${currentPosition.toIdString()}' has atom:TRUE, aborting further analysis.`,
     );
     // immediately return if found b/c no point in further processing
-    return { hasAtom: true, finalPoint: originalPosition };
+    return { isHit: true };
   }
 
   const leftCell = getLeftCell(currentPosition, gameGrid);
@@ -196,14 +195,14 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
 
     switch (analysisResult) {
       case CellAnalysisResult.Hit:
-        return { hasAtom: true, finalPoint: originalPosition };
+        return { isHit: true };
 
       case CellAnalysisResult.ContinueStraight:
         if (checkPerimeterReached(continueStraightTranslation, gameGrid)) {
           logger.debug(
             `Perimeter reached at position '${continueStraightTranslation.toIdString()}', exiting analysis loop`,
           );
-          return { hasAtom: false, finalPoint: continueStraightTranslation };
+          return { finalPoint: continueStraightTranslation };
         }
         return traceFrom(continueStraightTranslation, gameGrid);
 
@@ -212,7 +211,7 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
           logger.debug(
             `Perimeter reached at position '${makeLeftTurnTranslation.toIdString()}', exiting analysis loop`,
           );
-          return { hasAtom: false, finalPoint: makeLeftTurnTranslation };
+          return { finalPoint: makeLeftTurnTranslation };
         }
         return traceFrom(makeLeftTurnTranslation, gameGrid);
 
@@ -221,7 +220,7 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
           logger.debug(
             `Perimeter reached at position '${makeRightTurnTranslation.toIdString()}', exiting analysis loop`,
           );
-          return { hasAtom: false, finalPoint: makeRightTurnTranslation };
+          return { finalPoint: makeRightTurnTranslation };
         }
         return traceFrom(makeRightTurnTranslation, gameGrid);
 
@@ -229,7 +228,7 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
         logger.debug(
           `reflection detected at position '${currentPosition.toIdString()}', exiting analysis loop`,
         );
-        return { hasAtom: false, finalPoint: originalPosition };
+        return { isReflect: true };
       default:
         break;
     }
@@ -237,7 +236,9 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
   throw new Error('Unable to trace ray; should NEVER get to this line!');
 }
 class TraceResult {
-  hasAtom: boolean;
+  isHit?: boolean = false;
+
+  isReflect?: boolean = false;
 
   finalPoint?: Point;
 }
@@ -267,15 +268,27 @@ export function traceRay(entryPoint: Point, gameGrid: GameGrid): TraceResult {
   // TODO: determine whether this is actually necessary (if passed by-ref instead of by-val)
   gameGrid.rotate(activeRotationAngle * -1);
 
-  // rotate the resultant point back to its original orientation
+  // if we have a hit, return that with entry point as final point
+  if (traceResult.isHit) {
+    return { isHit: traceResult.isHit, finalPoint: entryPoint };
+  }
+
+  // if we have a reflect, return that with entry point as final point
+  if (traceResult.isReflect) {
+    return { isReflect: traceResult.isReflect, finalPoint: entryPoint };
+  }
+
+  // if we don't have a hit or a reflect...
   if (notNullOrUndefined(traceResult.finalPoint)) {
+    // ...rotate the resultant point back to its original orientation...
     const reverseRotatedPoint = rotatePoint(
       traceResult.finalPoint,
       activeRotationAngle * -1,
     );
 
-    return { hasAtom: traceResult.hasAtom, finalPoint: reverseRotatedPoint };
+    // ...and return that point as the final
+    return { finalPoint: reverseRotatedPoint };
   }
 
-  return traceResult;
+  throw new Error('No hit, no reflect, no point returned; should never happen');
 }

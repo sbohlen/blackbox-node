@@ -66,6 +66,6 @@ describe('When atom is in path', () => {
   });
 
   it('should return hit', () => {
-    expect(rayTraceResult.hasAtom).toEqual(true);
+    expect(rayTraceResult.isHit).toEqual(true);
   });
 });
