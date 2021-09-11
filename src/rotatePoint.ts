@@ -1,3 +1,5 @@
+import { Point } from './point';
+
 /**
  *
  *
@@ -9,7 +11,7 @@
  * @param {number} [centerY=0] y coordinate to rotate about (optional, defaults to 0)
  * @return {*}  { x: number; y: number } coordinates of rotated point
  */
-export function rotate(
+function rotate(
   x: number,
   y: number,
   angle: number,
@@ -22,4 +24,16 @@ export function rotate(
   const nx = cos * (x - centerX) + sin * (y - centerY) + centerX;
   const ny = cos * (y - centerY) - sin * (x - centerX) + centerY;
   return { x: nx, y: ny };
+}
+
+export function rotatePoint(
+  sourcePoint: Point,
+  rotationAngleClockwise: number,
+): Point {
+  const newCoords = rotate(
+    sourcePoint.X,
+    sourcePoint.Y,
+    rotationAngleClockwise,
+  );
+  return new Point(Math.round(newCoords.x), Math.round(newCoords.y));
 }
