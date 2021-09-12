@@ -193,6 +193,9 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
       currentPosition.Y,
     );
 
+    const makeLeftTurnRotation = 90;
+    const makeRightTurnRotation = -90;
+
     switch (analysisResult) {
       case CellAnalysisResult.Hit:
         return { isHit: true };
@@ -213,7 +216,12 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
           );
           return { finalPoint: makeLeftTurnTranslation };
         }
-        return traceFrom(makeLeftTurnTranslation, gameGrid);
+
+        gameGrid.rotate(makeLeftTurnRotation);
+        return traceFrom(
+          rotatePoint(makeLeftTurnTranslation, makeLeftTurnRotation),
+          gameGrid,
+        );
 
       case CellAnalysisResult.MakeRightTurn:
         if (checkPerimeterReached(makeRightTurnTranslation, gameGrid)) {
@@ -222,7 +230,12 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
           );
           return { finalPoint: makeRightTurnTranslation };
         }
-        return traceFrom(makeRightTurnTranslation, gameGrid);
+
+        gameGrid.rotate(makeRightTurnRotation);
+        return traceFrom(
+          rotatePoint(makeRightTurnTranslation, makeRightTurnRotation),
+          gameGrid,
+        );
 
       case CellAnalysisResult.Reflect:
         logger.debug(
