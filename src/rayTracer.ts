@@ -21,7 +21,7 @@ enum CellAnalysisResult {
   ContinueStraight = 'ContinueStraight',
 }
 
-function determineEntryDirection(
+function getInitialEntryDirection(
   entryPoint: Point,
   gameGrid: GameGrid,
 ): Direction {
@@ -251,7 +251,7 @@ rotationValueMap.set(Direction.Right, 90);
 rotationValueMap.set(Direction.Up, 0);
 
 export function traceRay(entryPoint: Point, gameGrid: GameGrid): TraceResult {
-  const entryDirection = determineEntryDirection(entryPoint, gameGrid);
+  const entryDirection = getInitialEntryDirection(entryPoint, gameGrid);
 
   let rotatedEntryPoint = entryPoint;
 
@@ -263,10 +263,6 @@ export function traceRay(entryPoint: Point, gameGrid: GameGrid): TraceResult {
   rotatedEntryPoint = rotatePoint(entryPoint, activeRotationAngle);
 
   const traceResult = traceFrom(rotatedEntryPoint, gameGrid);
-
-  // rotate the grid back to its original orientation
-  // TODO: determine whether this is actually necessary (if passed by-ref instead of by-val)
-  gameGrid.rotate(activeRotationAngle * -1);
 
   // if we have a hit, return that with entry point as final point
   if (traceResult.isHit) {
@@ -280,13 +276,17 @@ export function traceRay(entryPoint: Point, gameGrid: GameGrid): TraceResult {
 
   // if we don't have a hit or a reflect...
   if (notNullOrUndefined(traceResult.finalPoint)) {
-    // ...rotate the resultant point back to its original orientation...
+    // ...rotate the resultant point back to its original orientation
     const reverseRotatedPoint = rotatePoint(
       traceResult.finalPoint,
-      activeRotationAngle * -1,
+      gameGrid.currentCounterRotationAngle(),
     );
 
-    // ...and return that point as the final
+    // as a final pre-return step, rotate the grid back to its original orientation
+    // TODO: determine whether this is actually necessary (if passed by-ref instead of by-val)
+    gameGrid.resetRotation();
+
+    // return the counter-rotated point as the final
     return { finalPoint: reverseRotatedPoint };
   }
 

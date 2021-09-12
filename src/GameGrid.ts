@@ -83,6 +83,23 @@ export class GameGrid extends Map<string, Cell> {
    */
 
   resetRotation() {
+    const angle: number = this.currentCounterRotationAngle();
+
+    // if we have a non-zero angle, apply it
+    // (a no-op if we're already in desired state/rotation)
+    if (angle !== 0) {
+      this.rotate(angle);
+    }
+  }
+
+  currentRotationAngle(): number {
+    // this is the **inverse** of the counter-rotation angle
+    return this.currentCounterRotationAngle() * -1;
+  }
+
+  // angle necessary to rotate all points about origin (0,0) to return to
+  //  desired [+x,+Y] coordinate range
+  currentCounterRotationAngle(): number {
     let angle: number = 0;
 
     // because its wasteful to re-calc minX/minY for each test case,
@@ -112,10 +129,6 @@ export class GameGrid extends Map<string, Cell> {
       angle = 270;
     }
 
-    // if we have a non-zero angle, apply it
-    // (a no-op if we're already in desired state/rotation)
-    if (angle !== 0) {
-      this.rotate(angle);
-    }
+    return angle;
   }
 }
