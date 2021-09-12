@@ -12,15 +12,15 @@ describe('When traversing a clear path heading UP', () => {
    *                ^
    *                |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  ^ |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  ^ |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  ^ |    |    |
    *   +----+----+----+----+----
-   *   |    |    |    |    |    |
+   *   |    |    |  ^ |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  ^ |    |    |
    *   +----+----+----+----+----+
    *                ^
    *                |
@@ -44,15 +44,15 @@ describe('When traversing a clear path headed DOWN', () => {
    *                |
    *                v
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  v |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  v |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  v |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  v |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  v |    |    |
    *   +----+----+----+----+----+
    *                |
    *                v
@@ -78,7 +78,7 @@ describe('When traversing a clear path headed RIGHT', () => {
    *                +----+----+----+----+----+
    *                |    |    |    |    |    |
    *                +----+----+----+----+----+
-   * entry vector-> |    |    |    |    |    | -> exit
+   * entry vector-> | >  | >  | >  | >  | >  | -> exit
    *                +----+----+----+----+----+
    *                |    |    |    |    |    |
    *                +----+----+----+----+----+
@@ -105,7 +105,7 @@ describe('When traversing a clear path headed LEFT', () => {
    *         +----+----+----+----+----+
    *         |    |    |    |    |    |
    *         +----+----+----+----+----+
-   * exit <- |    |    |    |    |    | <- entry vector
+   * exit <- | <  | <  | <  | <  | <  | <- entry vector
    *         +----+----+----+----+----+
    *         |    |    |    |    |    |
    *         +----+----+----+----+----+
@@ -133,9 +133,9 @@ describe('When atom is in path', () => {
    *   +----+----+----+----+----+
    *   |    |    | XX |    |    |
    *   +----+----+----+----+----
-   *   |    |    |    |    |    |
+   *   |    |    |  ^ |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  ^ |    |    |
    *   +----+----+----+----+----+
    *                ^
    *                |
@@ -169,11 +169,11 @@ describe('When atom in upper-left of path', () => {
    *   +----+----+----+----+----+
    *   |    | XX |    |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    | -> exit
+   *   |    |    |  + | >  | >  | -> exit
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  ^ |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  ^ |    |    |
    *   +----+----+----+----+----+
    *                ^
    *                |
@@ -204,11 +204,11 @@ describe('When atom in upper-right of path', () => {
    *         +----+----+----+----+----+
    *         |    |    |    | XX |    |
    *         +----+----+----+----+----+
-   * exit <- |    |    |    |    |    |
+   * exit <- |  < | <  |  + |    |    |
    *         +----+----+----+----+----+
-   *         |    |    |    |    |    |
+   *         |    |    |  ^ |    |    |
    *         +----+----+----+----+----+
-   *         |    |    |    |    |    |
+   *         |    |    |  ^ |    |    |
    *         +----+----+----+----+----+
    *                      ^
    *                      |
@@ -238,11 +238,11 @@ describe('When atoms are in both upper-left and upper-right of path', () => {
    *   +----+----+----+----+----+
    *   |    | XX |    | XX |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    |  R |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    | v^ |    |    |
    *   +----+----+----+----+----+
-   *   |    |    |    |    |    |
+   *   |    |    | v^ |    |    |
    *   +----+----+----+----+----+
    *                ^
    *                |
@@ -281,9 +281,9 @@ describe('When atom is adjacent to entry', () => {
    *   +----+----+----+----+----+
    *   |    |    |    |    |    |
    *   +----+----+----+----+----+
-   *   |    | XX |    |    |    |
+   *   |    | XX |  R |    |    |
    *   +----+----+----+----+----+
-   *                ^
+   *               v^
    *                |
    *            entry vector
    *    (and also REFLECT result cell)
@@ -322,9 +322,9 @@ describe('When two atoms are adjacent to entry', () => {
    *   +----+----+----+----+----+
    *   |    |    |    |    |    |
    *   +----+----+----+----+----+
-   *   |    | XX |    | XX |    |
+   *   |    | XX |  R | XX |    |
    *   +----+----+----+----+----+
-   *                ^
+   *               v^
    *                |
    *            entry vector
    *    (and also REFLECT result cell)
@@ -351,5 +351,49 @@ describe('When two atoms are adjacent to entry', () => {
 
   it('should reflect', () => {
     expect(rayTraceResult.isReflect).toEqual(true);
+  });
+});
+
+describe('When making multiple turns', () => {
+  /**
+   *         exit
+   *           ^
+   *           |
+   *   +----+----+----+----+----+
+   *   |    |  ^ |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |  ^ |    | XX |    |
+   *   +----+----+----+----+----+
+   *   |    |  + |  + |    |    |
+   *   +----+----+----+----+----+
+   *   | XX |    |  ^ |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |  ^ |    |    |
+   *   +----+----+----+----+----+
+   *                ^
+   *                |
+   *            entry vector
+   *    (and also REFLECT result cell)
+   *
+   */
+
+  const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
+
+  const rayEntryPoint = new Point(5, 1);
+
+  // set the cells to have the atoms
+  gameGrid.get(
+    new Point(rayEntryPoint.X + 1, rayEntryPoint.Y + 5).toIdString(),
+  ).hasAtom = true;
+  gameGrid.get(
+    new Point(rayEntryPoint.X - 2, rayEntryPoint.Y + 3).toIdString(),
+  ).hasAtom = true;
+
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+
+  it('should return expected final point', () => {
+    const expectedFinalPoint = new Point(rayEntryPoint.X - 1, dimensionY);
+
+    expect(rayTraceResult.finalPoint).toEqual(expectedFinalPoint);
   });
 });
