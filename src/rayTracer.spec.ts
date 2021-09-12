@@ -1,24 +1,22 @@
 import { buildGameGrid } from './buildGameGrid';
-import { logger } from './logger';
 import { Point } from './point';
 import { traceRay } from './rayTracer';
 
 const dimensionX = 10;
 const dimensionY = 10;
 
-describe('When traversing a clear path UP', () => {
+describe('When traversing a clear path heading UP', () => {
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const rayEntryPoint = new Point(5, 1);
 
   it('should exit on the opposite side of the grid', () => {
-    logger.debug(`*****TEST: UP should exit on the opposite side of the grid`);
     const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
 
     expect(rayTraceResult.finalPoint).toEqual(new Point(5, 10));
   });
 });
 
-describe('When traversing a clear path DOWN', () => {
+describe('When traversing a clear path headed DOWN', () => {
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const rayEntryPoint = new Point(5, 10);
 
@@ -29,7 +27,7 @@ describe('When traversing a clear path DOWN', () => {
   });
 });
 
-describe('When traversing a clear path RIGHT', () => {
+describe('When traversing a clear path headed RIGHT', () => {
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const rayEntryPoint = new Point(1, 5);
 
@@ -40,7 +38,7 @@ describe('When traversing a clear path RIGHT', () => {
   });
 });
 
-describe('When traversing a clear path LEFT', () => {
+describe('When traversing a clear path headed LEFT', () => {
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const rayEntryPoint = new Point(10, 5);
 
