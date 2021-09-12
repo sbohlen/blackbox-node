@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-str */
 import { buildGameGrid } from './buildGameGrid';
 import { Point } from './point';
 import { traceRay } from './rayTracer';
@@ -6,6 +7,27 @@ const dimensionX = 10;
 const dimensionY = 10;
 
 describe('When traversing a clear path heading UP', () => {
+  /**
+   *              exit
+   *                ^
+   *                |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *                ^
+   *                |
+   *            entry vector
+   *
+   */
+
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const rayEntryPoint = new Point(5, 1);
 
@@ -17,6 +39,27 @@ describe('When traversing a clear path heading UP', () => {
 });
 
 describe('When traversing a clear path headed DOWN', () => {
+  /**
+   *           entry vector
+   *                |
+   *                v
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *                |
+   *                v
+   *              exit
+   *
+   */
+
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const rayEntryPoint = new Point(5, 10);
 
@@ -28,6 +71,22 @@ describe('When traversing a clear path headed DOWN', () => {
 });
 
 describe('When traversing a clear path headed RIGHT', () => {
+  /**
+   *
+   *                +----+----+----+----+----+
+   *                |    |    |    |    |    |
+   *                +----+----+----+----+----+
+   *                |    |    |    |    |    |
+   *                +----+----+----+----+----+
+   * entry vector-> |    |    |    |    |    | -> exit
+   *                +----+----+----+----+----+
+   *                |    |    |    |    |    |
+   *                +----+----+----+----+----+
+   *                |    |    |    |    |    |
+   *                +----+----+----+----+----+
+   *
+   */
+
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const rayEntryPoint = new Point(1, 5);
 
@@ -39,6 +98,22 @@ describe('When traversing a clear path headed RIGHT', () => {
 });
 
 describe('When traversing a clear path headed LEFT', () => {
+  /**
+   *
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   * exit <- |    |    |    |    |    | <- entry vector
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *
+   */
+
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const rayEntryPoint = new Point(10, 5);
 
@@ -50,6 +125,24 @@ describe('When traversing a clear path headed LEFT', () => {
 });
 
 describe('When atom is in path', () => {
+  /**
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    | XX |    |    |
+   *   +----+----+----+----+----
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *                ^
+   *                |
+   *            entry vector
+   *
+   */
+
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const pointHavingAtom = new Point(5, 5);
 
@@ -68,7 +161,26 @@ describe('When atom is in path', () => {
   });
 });
 
-describe('When atom in upper-left', () => {
+describe('When atom in upper-left of path', () => {
+  /**
+   *
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    | XX |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    | -> exit
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *                ^
+   *                |
+   *            entry vector
+   *
+   */
+
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const pointHavingAtom = new Point(5, 5);
 
@@ -84,7 +196,25 @@ describe('When atom in upper-left', () => {
   });
 });
 
-describe('When atom in upper-right', () => {
+describe('When atom in upper-right of path', () => {
+  /**
+   *
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |    |    |    | XX |    |
+   *         +----+----+----+----+----+
+   * exit <- |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *                      ^
+   *                      |
+   *                  entry vector
+   *
+   */
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
   const pointHavingAtom = new Point(5, 5);
 
@@ -100,7 +230,26 @@ describe('When atom in upper-right', () => {
   });
 });
 
-describe('When atom is in upper-left and upper-right', () => {
+describe('When atoms are in both upper-left and upper-right of path', () => {
+  /**
+   *
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    | XX |    | XX |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *                ^
+   *                |
+   *            entry vector
+   *    (and also REFLECT result cell)
+   *
+   */
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
 
   const rayEntryPoint = new Point(5, 1);
@@ -121,6 +270,26 @@ describe('When atom is in upper-left and upper-right', () => {
 });
 
 describe('When atom is adjacent to entry', () => {
+  /**
+   *
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    | XX |    |    |    |
+   *   +----+----+----+----+----+
+   *                ^
+   *                |
+   *            entry vector
+   *    (and also REFLECT result cell)
+   *
+   */
+
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
 
   const rayEntryPoint = new Point(5, 1);
@@ -142,6 +311,26 @@ describe('When atom is adjacent to entry', () => {
 });
 
 describe('When two atoms are adjacent to entry', () => {
+  /**
+   *
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    | XX |    | XX |    |
+   *   +----+----+----+----+----+
+   *                ^
+   *                |
+   *            entry vector
+   *    (and also REFLECT result cell)
+   *
+   */
+
   const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
 
   const rayEntryPoint = new Point(5, 1);
