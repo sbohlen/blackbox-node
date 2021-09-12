@@ -59,4 +59,63 @@ export class GameGrid extends Map<string, Cell> {
       this.set(cell.point.toIdString(), cell);
     }
   }
+
+  /**
+   *
+   * Given coordinates in ONE of the following cartesian quadrants,
+   * rotate all points back into their original (upper-right) quadrant.
+   *
+   * Because all prior possible prior rotations are about the [0,0] origin, its possible
+   * to infer from evaluating the minimum X and minimum Y of the collection in which of the
+   * four possible quadrants 100% of the points are located.  From that we can derive the
+   * necessary counter-rotation needed to be applied to return all points back to their original
+   * (desired) quadrant (e.g., the upper-right, [+X,+Y] region).
+   *
+   *           |
+   *   [-X,+Y] |  [+X,+Y]
+   *           |
+   *  ---------+--------- (origin/center is 0,0)
+   *           |
+   *  [-X,-Y]  |  [+X,-Y]
+   *           |
+   *
+   *
+   */
+
+  resetRotation() {
+    let angle: number = 0;
+
+    // because its wasteful to re-calc minX/minY for each test case,
+    //   retrieve the values ONCE for re-use in each if(...) block
+    const minimumX = this.minX;
+    const minimumY = this.minY;
+
+    // if we're in the Upper-Right quadrant
+    // (note: this statement offered for comprehensiveness only
+    //   because in this case we need not apply a counter-rotation)
+    if (minimumX > 0 && minimumY > 0) {
+      angle = 0;
+    }
+
+    // if we're in the Upper-Left quadrant
+    if (minimumX < 0 && minimumY > 0) {
+      angle = 90;
+    }
+
+    // if we're in the Lower-Left quadrant
+    if (minimumX < 0 && minimumY < 0) {
+      angle = 180;
+    }
+
+    // if we're in the Lower-Right quadrant
+    if (minimumX > 0 && minimumY < 0) {
+      angle = 270;
+    }
+
+    // if we have a non-zero angle, apply it
+    // (a no-op if we're already in desired state/rotation)
+    if (angle !== 0) {
+      this.rotate(angle);
+    }
+  }
 }
