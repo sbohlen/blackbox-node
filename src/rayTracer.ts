@@ -243,17 +243,17 @@ class TraceResult {
   finalPoint?: Point;
 }
 
+// create a dictionary of the rotation angle necessary for each entry vector direction
+const rotationValueMap = new Map<Direction, number>();
+rotationValueMap.set(Direction.Down, 180);
+rotationValueMap.set(Direction.Left, -90);
+rotationValueMap.set(Direction.Right, 90);
+rotationValueMap.set(Direction.Up, 0);
+
 export function traceRay(entryPoint: Point, gameGrid: GameGrid): TraceResult {
   const entryDirection = determineEntryDirection(entryPoint, gameGrid);
 
   let rotatedEntryPoint = entryPoint;
-
-  // create a dictionary of the rotation angle necessary for each entry vector direction
-  const rotationValueMap = new Map<Direction, number>();
-  rotationValueMap.set(Direction.Down, 180);
-  rotationValueMap.set(Direction.Left, -90);
-  rotationValueMap.set(Direction.Right, 90);
-  rotationValueMap.set(Direction.Up, 0);
 
   // lookup the appropriate rotation angle based on the entry vector direction
   const activeRotationAngle = rotationValueMap.get(entryDirection);
