@@ -397,3 +397,35 @@ describe('When making multiple turns', () => {
     expect(rayTraceResult.finalPoint).toEqual(expectedFinalPoint);
   });
 });
+
+describe('When traversing a clear path heading UP at the edge of the grid', () => {
+  /**
+   *    exit
+   *      ^
+   *      |
+   *   +----+----+----+----+----+
+   *   |  ^ |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |  ^ |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |  ^ |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |  ^ |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |  ^ |    |    |    |    |
+   *   +----+----+----+----+----+
+   *      ^
+   *      |
+   *    entry vector
+   *
+   */
+
+  const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
+  const rayEntryPoint = new Point(1, 1);
+
+  it('should exit on the opposite side of the grid', () => {
+    const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+
+    expect(rayTraceResult.finalPoint).toEqual(new Point(1, 10));
+  });
+});
