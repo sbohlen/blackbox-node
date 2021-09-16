@@ -177,7 +177,7 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
     );
 
     const makeLeftTurnRotation = 90;
-    const makeRightTurnRotation = -90;
+    const makeRightTurnRotation = 270;
 
     switch (analysisResult) {
       case CellAnalysisResult.Hit:
