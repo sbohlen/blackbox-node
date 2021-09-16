@@ -47,9 +47,9 @@ function getUpperLeftCell(currentPosition: Point, gameGrid: GameGrid): Cell {
 }
 
 /**
- *          +----- the cell [??] to analyze
- *          |
- *          V
+ *  [??] = the cell to analyze
+ *
+ *
  *  +----+    +----+
  *  | UL |    | UR |
  *  +----+----+----+
