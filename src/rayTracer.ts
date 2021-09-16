@@ -269,7 +269,7 @@ function getExitDirection(gameGrid: GameGrid): Direction {
 
   let exitDirection: Direction;
 
-  switch (gameGrid.currentCounterRotationAngle()) {
+  switch (gameGrid.currentResetRotationAngle()) {
     case 0:
       exitDirection = Direction.Up;
       break;
@@ -327,7 +327,7 @@ export function traceRay(
     // ...rotate the resultant point back to its original orientation
     const reverseRotatedPoint = rotatePoint(
       traceResult.finalPoint,
-      gameGrid.currentCounterRotationAngle(),
+      gameGrid.currentResetRotationAngle(),
     );
 
     const exitDirection = getExitDirection(gameGrid);

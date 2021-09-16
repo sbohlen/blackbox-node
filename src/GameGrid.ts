@@ -65,10 +65,10 @@ export class GameGrid extends Map<string, Cell> {
    * Given coordinates in ONE of the following cartesian quadrants,
    * rotate all points back into their original (upper-right) quadrant.
    *
-   * Because all prior possible prior rotations are about the [0,0] origin, its possible
-   * to infer from evaluating the minimum X and minimum Y of the collection in which of the
-   * four possible quadrants 100% of the points are located.  From that we can derive the
-   * necessary counter-rotation needed to be applied to return all points back to their original
+   * Because all prior possible prior rotations in this system would have been about the [0,0] origin,
+   * its possible to infer from evaluating the minimum X and minimum Y of the collection in which of
+   * the four possible quadrants 100% of the points are located at any given moment.  From that we can
+   * derive the necessary counter-rotation needed to be applied to return all points back to their original
    * (desired) quadrant (e.g., the upper-right, [+X,+Y] region).
    *
    *           |
@@ -83,10 +83,10 @@ export class GameGrid extends Map<string, Cell> {
    */
 
   resetRotation() {
-    const angle: number = this.currentCounterRotationAngle();
+    const angle: number = this.currentResetRotationAngle();
 
     // if we have a non-zero angle, apply it
-    // (a no-op if we're already in desired state/rotation)
+    // (a no-op if we're already in desired state/rotation and there's no  work to do)
     if (angle !== 0) {
       this.rotate(angle);
     }
@@ -94,12 +94,12 @@ export class GameGrid extends Map<string, Cell> {
 
   currentRotationAngle(): number {
     // this is the **inverse** of the counter-rotation angle
-    return this.currentCounterRotationAngle() * -1;
+    return this.currentResetRotationAngle() * -1;
   }
 
   // angle necessary to rotate all points about origin (0,0) to return to
   //  desired [+x,+Y] coordinate range
-  currentCounterRotationAngle(): number {
+  currentResetRotationAngle(): number {
     let angle: number = 0;
 
     // because its wasteful to re-calc minX/minY for each test case,
