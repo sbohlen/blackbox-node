@@ -13,7 +13,7 @@ describe('When a grid is rotated', () => {
     ${180}
     ${270}
   `(
-    'should return $initialOrientation D to 0D orientation when reset',
+    'should return $initialOrientation -degrees to 0 -degrees orientation when reset',
     ({ initialOrientation }) => {
       // apply the parameterized rotation to the grid
       gameGrid.rotate(initialOrientation);
