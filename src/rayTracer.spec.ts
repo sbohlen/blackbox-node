@@ -1,7 +1,7 @@
 /* eslint-disable no-multi-str */
 import { buildGameGrid } from './buildGameGrid';
 import { Point } from './point';
-import { traceRay } from './rayTracer';
+import { Direction, traceRay } from './rayTracer';
 
 const dimensionX = 10;
 const dimensionY = 10;
@@ -32,7 +32,7 @@ describe('When traversing a clear path heading UP', () => {
   const rayEntryPoint = new Point(5, 1);
 
   it('should exit on the opposite side of the grid', () => {
-    const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+    const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
 
     expect(rayTraceResult.finalPoint).toEqual(new Point(5, 10));
   });
@@ -64,7 +64,7 @@ describe('When traversing a clear path headed DOWN', () => {
   const rayEntryPoint = new Point(5, 10);
 
   it('should exit on the opposite side of the grid', () => {
-    const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+    const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Down);
 
     expect(rayTraceResult.finalPoint).toEqual(new Point(5, 1));
   });
@@ -91,7 +91,7 @@ describe('When traversing a clear path headed RIGHT', () => {
   const rayEntryPoint = new Point(1, 5);
 
   it('should exit on the opposite side of the grid', () => {
-    const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+    const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Right);
 
     expect(rayTraceResult.finalPoint).toEqual(new Point(10, 5));
   });
@@ -118,7 +118,7 @@ describe('When traversing a clear path headed LEFT', () => {
   const rayEntryPoint = new Point(10, 5);
 
   it('should exit on the opposite side of the grid', () => {
-    const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+    const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Left);
 
     expect(rayTraceResult.finalPoint).toEqual(new Point(1, 5));
   });
@@ -150,7 +150,7 @@ describe('When atom is in path', () => {
   gameGrid.get(pointHavingAtom.toIdString()).hasAtom = true;
 
   const rayEntryPoint = new Point(5, 1);
-  const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
 
   it('should return entry point as final point', () => {
     expect(rayTraceResult.finalPoint).toEqual(rayEntryPoint);
@@ -189,7 +189,7 @@ describe('When atom in upper-left of path', () => {
 
   const rayEntryPoint = new Point(6, 1);
 
-  const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
 
   it('should make right turn', () => {
     expect(rayTraceResult.finalPoint).toEqual(new Point(10, 4));
@@ -223,7 +223,7 @@ describe('When atom in upper-right of path', () => {
 
   const rayEntryPoint = new Point(4, 1);
 
-  const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
 
   it('should make left turn', () => {
     expect(rayTraceResult.finalPoint).toEqual(new Point(1, 4));
@@ -258,7 +258,7 @@ describe('When atoms are in both upper-left and upper-right of path', () => {
   gameGrid.get(new Point(rayEntryPoint.X - 1, 5).toIdString()).hasAtom = true;
   gameGrid.get(new Point(rayEntryPoint.X + 1, 5).toIdString()).hasAtom = true;
 
-  const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
 
   it('should return entry point as final point', () => {
     expect(rayTraceResult.finalPoint).toEqual(rayEntryPoint);
@@ -299,7 +299,7 @@ describe('When atom is adjacent to entry', () => {
     new Point(rayEntryPoint.X - 1, rayEntryPoint.Y).toIdString(),
   ).hasAtom = true;
 
-  const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
 
   it('should return entry point as final point', () => {
     expect(rayTraceResult.finalPoint).toEqual(rayEntryPoint);
@@ -343,7 +343,7 @@ describe('When two atoms are adjacent to entry', () => {
     new Point(rayEntryPoint.X + 1, rayEntryPoint.Y).toIdString(),
   ).hasAtom = true;
 
-  const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
 
   it('should return entry point as final point', () => {
     expect(rayTraceResult.finalPoint).toEqual(rayEntryPoint);
@@ -389,7 +389,7 @@ describe('When making multiple turns', () => {
     new Point(rayEntryPoint.X - 2, rayEntryPoint.Y + 3).toIdString(),
   ).hasAtom = true;
 
-  const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
 
   it('should return expected final point', () => {
     const expectedFinalPoint = new Point(rayEntryPoint.X - 1, dimensionY);
@@ -424,7 +424,7 @@ describe('When traversing a clear path heading UP at the edge of the grid', () =
   const rayEntryPoint = new Point(1, 1);
 
   it('should exit on the opposite side of the grid', () => {
-    const rayTraceResult = traceRay(rayEntryPoint, gameGrid);
+    const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
 
     expect(rayTraceResult.finalPoint).toEqual(new Point(1, 10));
   });

@@ -5,7 +5,7 @@ import { Point } from './point';
 import { rotatePoint } from './rotatePoint';
 import { logger } from './logger';
 
-enum Direction {
+export enum Direction {
   Up = 'Up',
   Down = 'Down',
   Left = 'Left',
@@ -21,49 +21,29 @@ enum CellAnalysisResult {
   ContinueStraight = 'ContinueStraight',
 }
 
-function getInitialEntryDirection(
-  entryPoint: Point,
-  gameGrid: GameGrid,
-): Direction {
-  logger.debug('Determining entry vector direction...');
-
-  let entryDirection: Direction;
-
-  if (entryPoint.X === gameGrid.minX) {
-    entryDirection = Direction.Left;
-  } else if (entryPoint.Y === gameGrid.minY) {
-    entryDirection = Direction.Up;
-  } else if (entryPoint.Y === gameGrid.maxY) {
-    entryDirection = Direction.Down;
-  } else if (entryPoint.X === gameGrid.maxX) {
-    entryDirection = Direction.Right;
-  } else {
-    entryDirection = Direction.Indeterminate;
-  }
-
-  logger.debug(`Entry vector direction determined: '${entryDirection}'`);
-
-  return entryDirection;
+function getForwardCell(currentPosition: Point, gameGrid: GameGrid): Cell {
+  const selectPoint = new Point(currentPosition.X, currentPosition.Y + 1);
+  return gameGrid.get(selectPoint.toIdString()) ?? new Cell(selectPoint);
 }
 
 function getLeftCell(currentPosition: Point, gameGrid: GameGrid): Cell {
   const selectPoint = new Point(currentPosition.X - 1, currentPosition.Y);
-  return gameGrid.get(selectPoint.toIdString());
+  return gameGrid.get(selectPoint.toIdString()) ?? new Cell(selectPoint);
 }
 
 function getRightCell(currentPosition: Point, gameGrid: GameGrid): Cell {
   const selectPoint = new Point(currentPosition.X + 1, currentPosition.Y);
-  return gameGrid.get(selectPoint.toIdString());
+  return gameGrid.get(selectPoint.toIdString()) ?? new Cell(selectPoint);
 }
 
 function getUpperRightCell(currentPosition: Point, gameGrid: GameGrid): Cell {
   const selectPoint = new Point(currentPosition.X + 1, currentPosition.Y + 1);
-  return gameGrid.get(selectPoint.toIdString());
+  return gameGrid.get(selectPoint.toIdString()) ?? new Cell(selectPoint);
 }
 
 function getUpperLeftCell(currentPosition: Point, gameGrid: GameGrid): Cell {
   const selectPoint = new Point(currentPosition.X - 1, currentPosition.Y + 1);
-  return gameGrid.get(selectPoint.toIdString());
+  return gameGrid.get(selectPoint.toIdString()) ?? new Cell(selectPoint);
 }
 
 /**
@@ -81,6 +61,7 @@ function getUpperLeftCell(currentPosition: Point, gameGrid: GameGrid): Cell {
  */
 function analyzeCellContext(
   currentCell: Cell,
+  forwardCell: Cell,
   leftCell: Cell,
   rightCell: Cell,
   upperLeftCell: Cell,
@@ -135,10 +116,10 @@ function checkPerimeterReached(point: Point, gameGrid: GameGrid): Boolean {
   );
 
   const result =
-    point.X === gameGrid.minX ||
-    point.X === gameGrid.maxX ||
-    point.Y === gameGrid.minY ||
-    point.Y === gameGrid.maxY;
+    point.X < gameGrid.minX ||
+    point.X > gameGrid.maxX ||
+    point.Y < gameGrid.minY ||
+    point.Y > gameGrid.maxY;
 
   logger.debug(`Perimeter check for point '${point.toIdString()}': ${result}`);
 
@@ -159,6 +140,7 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
     return { isHit: true };
   }
 
+  const forwardCell = getForwardCell(currentPosition, gameGrid);
   const leftCell = getLeftCell(currentPosition, gameGrid);
   const rightCell = getRightCell(currentPosition, gameGrid);
   const upperLeftCell = getUpperLeftCell(currentPosition, gameGrid);
@@ -168,6 +150,7 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
   while (true) {
     const analysisResult: CellAnalysisResult = analyzeCellContext(
       currentCell,
+      forwardCell,
       leftCell,
       rightCell,
       upperLeftCell,
@@ -248,7 +231,7 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
   }
   throw new Error('Unable to trace ray; should NEVER get to this line!');
 }
-class TraceResult {
+export class TraceResult {
   isHit?: boolean = false;
 
   isReflect?: boolean = false;
@@ -256,16 +239,68 @@ class TraceResult {
   finalPoint?: Point;
 }
 
+function translateToActualFinalPoint(
+  currentPoint: Point,
+  entryDirection: Direction,
+): Point {
+  switch (entryDirection) {
+    case Direction.Up:
+      return new Point(currentPoint.X, currentPoint.Y - 1);
+    case Direction.Down:
+      return new Point(currentPoint.X, currentPoint.Y + 1);
+    case Direction.Left:
+      return new Point(currentPoint.X + 1, currentPoint.Y);
+    case Direction.Right:
+      return new Point(currentPoint.X - 1, currentPoint.Y);
+    default:
+      throw new Error(`Invalid direction: ${entryDirection}`);
+  }
+}
+
 // create a dictionary of the rotation angle necessary for each entry vector direction
 const rotationValueMap = new Map<Direction, number>();
 rotationValueMap.set(Direction.Down, 180);
-rotationValueMap.set(Direction.Left, -90);
-rotationValueMap.set(Direction.Right, 90);
+rotationValueMap.set(Direction.Left, 90);
+rotationValueMap.set(Direction.Right, 270);
 rotationValueMap.set(Direction.Up, 0);
 
-export function traceRay(entryPoint: Point, gameGrid: GameGrid): TraceResult {
-  const entryDirection = getInitialEntryDirection(entryPoint, gameGrid);
+function getExitDirection(gameGrid: GameGrid): Direction {
+  logger.debug('Determining exit vector direction...');
 
+  let exitDirection: Direction;
+
+  switch (gameGrid.currentCounterRotationAngle()) {
+    case 0:
+      exitDirection = Direction.Up;
+      break;
+
+    case 90:
+      exitDirection = Direction.Right;
+      break;
+
+    case 180:
+      exitDirection = Direction.Down;
+      break;
+
+    case 270:
+      exitDirection = Direction.Left;
+      break;
+
+    default:
+      exitDirection = Direction.Indeterminate;
+      break;
+  }
+
+  logger.debug(`Exit vector direction determined: '${exitDirection}'`);
+
+  return exitDirection;
+}
+
+export function traceRay(
+  entryPoint: Point,
+  gameGrid: GameGrid,
+  entryDirection: Direction,
+): TraceResult {
   let rotatedEntryPoint = entryPoint;
 
   // lookup the appropriate rotation angle based on the entry vector direction
@@ -295,12 +330,19 @@ export function traceRay(entryPoint: Point, gameGrid: GameGrid): TraceResult {
       gameGrid.currentCounterRotationAngle(),
     );
 
+    const exitDirection = getExitDirection(gameGrid);
+
     // as a final pre-return step, rotate the grid back to its original orientation
     // TODO: determine whether this is actually necessary (if passed by-ref instead of by-val)
     gameGrid.resetRotation();
 
+    const translatedFinalPoint = translateToActualFinalPoint(
+      reverseRotatedPoint,
+      exitDirection,
+    );
+
     // return the counter-rotated point as the final
-    return { finalPoint: reverseRotatedPoint };
+    return { finalPoint: translatedFinalPoint };
   }
 
   throw new Error('No hit, no reflect, no point returned; should never happen');
