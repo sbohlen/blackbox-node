@@ -230,6 +230,40 @@ describe('When atom in upper-right of path', () => {
   });
 });
 
+describe('When atom in upper-right of path at the edge of the grid', () => {
+  /**
+   *
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |    | XX |    |    |    |
+   *         +----+----+----+----+----+
+   * exit <- |  + |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |  ^ |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |  ^ |    |    |    |    |
+   *         +----+----+----+----+----+
+   *            ^
+   *            |
+   *        entry vector
+   *
+   */
+  const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
+  const pointHavingAtom = new Point(2, 5);
+
+  // set the cell to have the atom
+  gameGrid.get(pointHavingAtom.toIdString()).hasAtom = true;
+
+  const rayEntryPoint = new Point(1, 1);
+
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
+
+  it('should make left turn', () => {
+    expect(rayTraceResult.finalPoint).toEqual(new Point(1, 4));
+  });
+});
+
 describe('When atoms are in both upper-left and upper-right of path', () => {
   /**
    *
@@ -424,6 +458,92 @@ describe('When traversing a clear path heading UP at the edge of the grid', () =
 
   it('should exit on the opposite side of the grid', () => {
     const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
+
+    expect(rayTraceResult.finalPoint).toEqual(new Point(1, 10));
+  });
+});
+
+describe('When traversing a clear path heading DOWN at the edge of the grid', () => {
+  /**
+   *    entry vector
+   *      |
+   *      v
+   *   +----+----+----+----+----+
+   *   |  v |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |  v |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |  v |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |  v |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |  v |    |    |    |    |
+   *   +----+----+----+----+----+
+   *      |
+   *      v
+   *    exit
+   *
+   */
+
+  const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
+  const rayEntryPoint = new Point(1, 10);
+
+  it('should exit on the opposite side of the grid', () => {
+    const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Down);
+
+    expect(rayTraceResult.finalPoint).toEqual(new Point(1, 1));
+  });
+});
+
+describe('When traversing a clear path headed RIGHT at the edge of the grid', () => {
+  /**
+   *
+   *                +----+----+----+----+----+
+   * entry vector-> | >  | >  | >  | >  | >  | -> exit
+   *                +----+----+----+----+----+
+   *                |    |    |    |    |    |
+   *                +----+----+----+----+----+
+   *                |    |    |    |    |    |
+   *                +----+----+----+----+----+
+   *                |    |    |    |    |    |
+   *                +----+----+----+----+----+
+   *                |    |    |    |    |    |
+   *                +----+----+----+----+----+
+   *
+   */
+
+  const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
+  const rayEntryPoint = new Point(1, 10);
+
+  it('should exit on the opposite side of the grid', () => {
+    const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Right);
+
+    expect(rayTraceResult.finalPoint).toEqual(new Point(10, 10));
+  });
+});
+
+describe('When traversing a clear path headed LEFT at the edge of the grid', () => {
+  /**
+   *
+   *         +----+----+----+----+----+
+   * exit <- | <  | <  | <  | <  | <  | <- entry vector
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *         |    |    |    |    |    |
+   *         +----+----+----+----+----+
+   *
+   */
+
+  const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
+  const rayEntryPoint = new Point(10, 10);
+
+  it('should exit on the opposite side of the grid', () => {
+    const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Left);
 
     expect(rayTraceResult.finalPoint).toEqual(new Point(1, 10));
   });
