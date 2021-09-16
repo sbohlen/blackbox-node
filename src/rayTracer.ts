@@ -226,10 +226,9 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
         );
         return { isReflect: true };
       default:
-        break;
+        throw new Error('Unable to trace ray; should NEVER get to this line!');
     }
   }
-  throw new Error('Unable to trace ray; should NEVER get to this line!');
 }
 export class TraceResult {
   isHit?: boolean = false;
