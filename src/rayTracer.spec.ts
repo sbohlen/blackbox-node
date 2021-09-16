@@ -472,3 +472,44 @@ describe('When making a turn into a reflection', () => {
     expect(rayTraceResult.isReflect).toEqual(true);
   });
 });
+
+describe('When making a turn into an atom', () => {
+  /**
+   *
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    | XX |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |  + | >  | XX |
+   *   +----+----+----+----+----+
+   *   |    |    |  ^ |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |  ^ |    |    |
+   *   +----+----+----+----+----+
+   *                ^
+   *                |
+   *            entry vector
+   *
+   */
+
+  const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
+  const pointHavingAtomForcingTurn = new Point(5, 5);
+  const pointHavingAtomForcingHit = new Point(dimensionX, 4);
+
+  // set the cells to have the atoms
+  gameGrid.get(pointHavingAtomForcingTurn.toIdString()).hasAtom = true;
+  gameGrid.get(pointHavingAtomForcingHit.toIdString()).hasAtom = true;
+
+  const rayEntryPoint = new Point(6, 1);
+
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
+
+  it('should return entry point as final point', () => {
+    expect(rayTraceResult.finalPoint).toEqual(rayEntryPoint);
+  });
+
+  it('should return hit', () => {
+    expect(rayTraceResult.isHit).toEqual(true);
+  });
+});
