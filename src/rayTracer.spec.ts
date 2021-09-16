@@ -373,7 +373,6 @@ describe('When making multiple turns', () => {
    *                ^
    *                |
    *            entry vector
-   *    (and also REFLECT result cell)
    *
    */
 
@@ -427,5 +426,49 @@ describe('When traversing a clear path heading UP at the edge of the grid', () =
     const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
 
     expect(rayTraceResult.finalPoint).toEqual(new Point(1, 10));
+  });
+});
+
+describe('When making a turn into a reflection', () => {
+  /**
+   *
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    | XX |    |    | XX |
+   *   +----+----+----+----+----+
+   *   |    |    |  + | >  | R  |
+   *   +----+----+----+----+----+
+   *   |    |    |  ^ |    | XX |
+   *   +----+----+----+----+----+
+   *   |    |    |  ^ |    |    |
+   *   +----+----+----+----+----+
+   *               v^
+   *                |
+   *            entry/exit vector
+   *      (and also REFLECT result cell)
+   *
+   */
+
+  const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
+  const pointHavingAtomForcingTurn = new Point(5, 5);
+  const pointHavingAtomForcingReflect1 = new Point(dimensionX, 5);
+  const pointHavingAtomForcingReflect2 = new Point(dimensionX, 3);
+
+  // set the cells to have the atoms
+  gameGrid.get(pointHavingAtomForcingTurn.toIdString()).hasAtom = true;
+  gameGrid.get(pointHavingAtomForcingReflect1.toIdString()).hasAtom = true;
+  gameGrid.get(pointHavingAtomForcingReflect2.toIdString()).hasAtom = true;
+
+  const rayEntryPoint = new Point(6, 1);
+
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
+
+  it('should return entry point as final point', () => {
+    expect(rayTraceResult.finalPoint).toEqual(rayEntryPoint);
+  });
+
+  it('should reflect', () => {
+    expect(rayTraceResult.isReflect).toEqual(true);
   });
 });
