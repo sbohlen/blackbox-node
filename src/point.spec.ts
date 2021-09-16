@@ -19,10 +19,10 @@ describe('When comparing two instances', () => {
   const differentPoint = new Point(testValue + 1, testValue + 1);
 
   it('should consider same values as equal point', () => {
-    expect(testPoint).toEqual(samePoint);
+    expect(testPoint.equals(samePoint)).toBe(true);
   });
 
   it('should consider different values as unequal points', () => {
-    expect(testPoint).not.toEqual(differentPoint);
+    expect(testPoint.equals(differentPoint)).toBe(false);
   });
 });

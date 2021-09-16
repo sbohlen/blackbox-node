@@ -45,10 +45,10 @@ describe('When comparing two instances', () => {
   const differentCoordinate = new Coordinate(testValue + 1);
 
   it('should consider same values as equal coordinates', () => {
-    expect(testCoordinate).toEqual(sameCoordinate);
+    expect(testCoordinate.equals(sameCoordinate)).toBe(true);
   });
 
   it('should consider different values as unequal coordinates', () => {
-    expect(testCoordinate).not.toEqual(differentCoordinate);
+    expect(testCoordinate.equals(differentCoordinate)).toBe(false);
   });
 });
