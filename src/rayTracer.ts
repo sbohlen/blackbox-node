@@ -197,7 +197,12 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
           logger.debug(
             `Perimeter reached at position '${makeLeftTurnTranslation.toIdString()}', exiting analysis loop`,
           );
-          return { finalPoint: makeLeftTurnTranslation };
+          gameGrid.rotate(makeLeftTurnRotation);
+          const rotatedLeftTurnTranslation = rotatePoint(
+            makeLeftTurnTranslation,
+            makeLeftTurnRotation,
+          );
+          return { finalPoint: rotatedLeftTurnTranslation };
         }
 
         gameGrid.rotate(makeLeftTurnRotation);
@@ -211,7 +216,12 @@ function traceFrom(currentPosition: Point, gameGrid: GameGrid): TraceResult {
           logger.debug(
             `Perimeter reached at position '${makeRightTurnTranslation.toIdString()}', exiting analysis loop`,
           );
-          return { finalPoint: makeRightTurnTranslation };
+          gameGrid.rotate(makeRightTurnRotation);
+          const rotatedRightTurnTranslation = rotatePoint(
+            makeRightTurnTranslation,
+            makeRightTurnRotation,
+          );
+          return { finalPoint: rotatedRightTurnTranslation };
         }
 
         gameGrid.rotate(makeRightTurnRotation);
