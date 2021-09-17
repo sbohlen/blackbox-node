@@ -230,6 +230,41 @@ describe('When atom in upper-right of path', () => {
   });
 });
 
+describe('When atom in upper-left of path at the edge of the grid', () => {
+  /**
+   *
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    | XX |    |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |  + | -> exit
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |  ^ |
+   *   +----+----+----+----+----+
+   *   |    |    |    |    |  ^ |
+   *   +----+----+----+----+----+
+   *                          ^
+   *                          |
+   *                      entry vector
+   *
+   */
+
+  const gameGrid = buildGameGrid(dimensionX, dimensionY, 0);
+  const pointHavingAtom = new Point(9, 5);
+
+  // set the cell to have the atom
+  gameGrid.get(pointHavingAtom.toIdString()).hasAtom = true;
+
+  const rayEntryPoint = new Point(10, 1);
+
+  const rayTraceResult = traceRay(rayEntryPoint, gameGrid, Direction.Up);
+
+  it('should make right turn', () => {
+    expect(rayTraceResult.finalPoint).toEqual(new Point(10, 4));
+  });
+});
+
 describe('When atom in upper-right of path at the edge of the grid', () => {
   /**
    *
