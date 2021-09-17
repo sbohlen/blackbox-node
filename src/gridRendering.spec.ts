@@ -28,15 +28,35 @@ describe('When rendering table', () => {
         'right-mid': '╢',
         middle: '│',
       },
+      colAligns: Array(12).fill('middle'),
     });
 
     const gameGrid = buildGameGrid(dimensionX, dimensionY, atomCount);
 
-    for (let y = dimensionY; y >= 1; y -= 1) {
+    for (let y = dimensionY + 1; y >= 0; y -= 1) {
       const row: Array<string> = new Array<string>();
-      for (let x = 1; x <= dimensionX; x += 1) {
-        const point: Point = new Point(x, y);
-        row.push(gameGrid.get(point.toIdString()).point.toIdString());
+
+      if (y === 0 || y > dimensionY) {
+        for (let x = 0; x <= dimensionX + 1; x += 1) {
+          if (x === 0) {
+            row.push('');
+          } else if (x <= dimensionX) {
+            row.push(x.toString());
+          } else {
+            row.push('');
+          }
+        }
+      }
+
+      if (y <= dimensionY && y > 0) {
+        row.push(y.toString());
+
+        for (let x = 1; x <= dimensionX; x += 1) {
+          const point: Point = new Point(x, y);
+          row.push(`[${gameGrid.get(point.toIdString()).point.toIdString()}]`);
+        }
+
+        row.push(y.toString());
       }
 
       table.push(row);
