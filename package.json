@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/sbohlen/blackbox-node#readme",
   "dependencies": {
+    "cli-table": "^0.3.6",
     "logform": "^2.2.0",
     "winston": "^3.3.3"
   },
