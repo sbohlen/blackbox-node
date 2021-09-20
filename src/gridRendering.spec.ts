@@ -1,5 +1,4 @@
 import { buildGameGrid } from './buildGameGrid';
-import { Cell } from './Cell';
 import { Point } from './point';
 
 const Table = require('cli-table');
@@ -28,7 +27,7 @@ describe('When rendering table', () => {
         'right-mid': '╢',
         middle: '│',
       },
-      colAligns: Array(12).fill('middle'),
+      colAligns: Array(dimensionX + 2).fill('middle'),
     });
 
     const gameGrid = buildGameGrid(dimensionX, dimensionY, atomCount);
