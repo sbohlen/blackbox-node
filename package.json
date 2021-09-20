@@ -33,6 +33,7 @@
   "dependencies": {
     "cli-table": "^0.3.6",
     "logform": "^2.2.0",
+    "prompts": "^2.4.1",
     "winston": "^3.3.3"
   },
   "devDependencies": {
