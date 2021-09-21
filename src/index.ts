@@ -21,6 +21,7 @@ function validateResponse(input: any): boolean | string {
       validate: validateResponse,
     });
 
+    // eslint-disable-next-line no-console
     console.log(response.value);
   }
 })();
