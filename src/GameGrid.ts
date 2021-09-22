@@ -102,7 +102,7 @@ export class GameGrid extends Map<string, Cell> {
   currentResetRotationAngle(): number {
     let angle: number = 0;
 
-    // because its wasteful to re-calc minX/minY for each test case,
+    // because its (semi-)expensive to re-calc minX/minY for each test case,
     //   retrieve the values ONCE for re-use in each if(...) block
     const minimumX = this.minX;
     const minimumY = this.minY;
