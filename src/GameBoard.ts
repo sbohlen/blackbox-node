@@ -9,6 +9,7 @@ import { Direction, traceRay } from './rayTracer';
 import {
   addGuess,
   correctGuessCount,
+  enableAlternateDisplayOption,
   incorrectGuessCount,
   removeGuess,
   revealAll,
@@ -97,6 +98,10 @@ export class GameBoard {
 
   revealAll() {
     revealAll(this.GameGrid);
+  }
+
+  enableAlternateDisplayOption() {
+    enableAlternateDisplayOption(this.GameGrid);
   }
 
   getGameStatistics(): GameStatistics {

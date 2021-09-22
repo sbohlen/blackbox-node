@@ -9,7 +9,7 @@ export class GridAnnotation extends GridElement {
     super(point);
   }
 
-  toDisplayString(): string {
+  buildDefaultDisplayString(): string {
     return this.annotation;
   }
 }

@@ -13,7 +13,7 @@ export class Cell extends GridElement {
     super(point);
   }
 
-  toDisplayString(): string {
+  buildDefaultDisplayString(): string {
     if (this.isRevealMode) {
       if (this.isGuess) {
         return this.hasAtom

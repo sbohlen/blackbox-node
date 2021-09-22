@@ -9,6 +9,12 @@ describe('When rendering GameBoard', () => {
   it('should render', () => {
     const gameBoard = new GameBoard(dimensionX, dimensionY, atomCount);
 
+    gameBoard.addGuess(3, 3);
+
+    gameBoard.enableAlternateDisplayOption();
+
+    gameBoard.revealAll();
+
     const gameBoardToRender = render(gameBoard);
 
     // eslint-disable-next-line no-console

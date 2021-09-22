@@ -23,6 +23,16 @@ export function revealAll(gameGrid: GameGrid) {
   }
 }
 
+export function enableAlternateDisplayOption(gameGrid: GameGrid) {
+  const keys = Array.from(gameGrid.keys());
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const key of keys) {
+    const cell = gameGrid.get(key);
+    cell.useAlternateDisplayString = true;
+  }
+}
+
 export function correctGuessCount(gameGrid: GameGrid): number {
   return Array.from(gameGrid.values()).filter(
     (cell) => cell.isGuess && cell.hasAtom,
