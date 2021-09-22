@@ -1,9 +1,34 @@
 import { GameBoard } from './GameBoard';
+import { GridElement } from './GridElement';
 import { Point } from './point';
 
 const Table = require('cli-table');
 
-export function render(gameBoard: GameBoard) {
+function checkPointIsWithinPlayableGridScope(
+  x: number,
+  y: number,
+  gameGrid,
+): boolean {
+  return (
+    x <= gameGrid.maxX &&
+    x >= gameGrid.minX &&
+    y <= gameGrid.maxY &&
+    y >= gameGrid.minY
+  );
+}
+
+function getBoardElement(
+  x: number,
+  y: number,
+  gameBoard: GameBoard,
+): GridElement {
+  if (checkPointIsWithinPlayableGridScope(x, y, gameBoard.GameGrid)) {
+    return gameBoard.GameGrid.get(new Point(x, y).toIdString());
+  }
+  return gameBoard.GridAnnotations.get(new Point(x, y).toIdString());
+}
+
+export function render(gameBoard: GameBoard): any {
   const gameBoardToRender = new Table({
     chars: {
       top: '═',
@@ -76,7 +101,13 @@ export function render(gameBoard: GameBoard) {
           currentColumnIndex <= gameBoard.GameGrid.maxX
         ) {
           // ...display the annotation
-          row.push(`Anno ${currentColumnIndex.toString()}`);
+          row.push(
+            getBoardElement(
+              currentColumnIndex,
+              currentRowIndex,
+              gameBoard,
+            ).toDisplayString(),
+          );
         } else {
           // ...otherwise display empty string
           row.push('');
@@ -101,12 +132,13 @@ export function render(gameBoard: GameBoard) {
           currentColumnIndex >= gameBoard.GameGrid.minX &&
           currentColumnIndex <= gameBoard.GameGrid.maxX
         ) {
-          // ...display the coordinate
-          const point = new Point(currentColumnIndex, currentRowIndex);
+          // ...display the contents of the cell
           row.push(
-            `[${gameBoard.GameGrid.get(
-              point.toIdString(),
-            ).point.toIdString()}]`,
+            getBoardElement(
+              currentColumnIndex,
+              currentRowIndex,
+              gameBoard,
+            ).toDisplayString(),
           );
         }
 
@@ -124,8 +156,14 @@ export function render(gameBoard: GameBoard) {
           currentColumnIndex === gameBoard.GameGrid.minX - 1 ||
           currentColumnIndex === gameBoard.GameGrid.maxX + 1
         ) {
-          // ...display the index
-          row.push(`Anno ${currentColumnIndex.toString()}`);
+          // ...display the annotation
+          row.push(
+            getBoardElement(
+              currentColumnIndex,
+              currentRowIndex,
+              gameBoard,
+            ).toDisplayString(),
+          );
         }
       }
     }
