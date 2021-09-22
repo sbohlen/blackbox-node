@@ -10,7 +10,7 @@ export function buildGameGrid(dimensionX, dimensionY, atomCount): GameGrid {
   for (let xIndex = 1; xIndex <= dimensionX; xIndex += 1) {
     for (let yIndex = 1; yIndex <= dimensionY; yIndex += 1) {
       const point = new Point(xIndex, yIndex);
-      grid.set(point.toIdString(), new Cell(point, false));
+      grid.set(point.toIdString(), new Cell(point));
     }
   }
 
