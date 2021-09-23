@@ -57,7 +57,7 @@ describe('When revealing the board', () => {
       // add the guess
       board.addGuess(guessX, guessY);
 
-      // set the only atom on the grid
+      // ensure the desired cell has the necessary atom
       board.GameGrid.get(new Point(atomX, atomY).toIdString()).hasAtom = true;
 
       // do the reveal
