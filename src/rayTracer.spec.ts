@@ -1,7 +1,8 @@
 /* eslint-disable no-multi-str */
 import { buildGameGrid } from './buildGameGrid';
+import { Direction } from './Direction';
 import { Point } from './point';
-import { Direction, traceRay } from './rayTracer';
+import { traceRay } from './rayTracer';
 
 const dimensionX = 10;
 const dimensionY = 10;

@@ -1,25 +1,11 @@
 import { Cell } from './Cell';
+import { CellAnalysisResult } from './CellAnalysisResult';
+import { Direction } from './Direction';
 import { GameGrid } from './GameGrid';
+import { logger } from './logger';
 import { notNullOrUndefined } from './notNullOrUndefined';
 import { Point } from './point';
 import { rotatePoint } from './rotatePoint';
-import { logger } from './logger';
-
-export enum Direction {
-  Up = 'Up',
-  Down = 'Down',
-  Left = 'Left',
-  Right = 'Right',
-  Indeterminate = 'Indeterminate',
-}
-
-enum CellAnalysisResult {
-  Hit = 'Hit',
-  Reflect = 'Reflect',
-  MakeLeftTurn = 'MakeLeftTurn',
-  MakeRightTurn = 'MakeRightTurn',
-  ContinueStraight = 'ContinueStraight',
-}
 
 function getForwardCell(currentPosition: Point, gameGrid: GameGrid): Cell {
   const selectPoint = new Point(currentPosition.X, currentPosition.Y + 1);
@@ -47,6 +33,12 @@ function getUpperLeftCell(currentPosition: Point, gameGrid: GameGrid): Cell {
 }
 
 /**
+ *
+ * Cheat-sheet
+ * (all analysis occurs on cells having been rotated/oriented
+ *   such that entry vector is UP)
+ *
+ *
  *  [??] = the cell to analyze
  *
  *
