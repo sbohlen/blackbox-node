@@ -23,13 +23,13 @@ export function revealAll(gameGrid: GameGrid) {
   }
 }
 
-export function enableAlternateDisplayOption(gameGrid: GameGrid) {
+export function enableDebugDisplay(gameGrid: GameGrid) {
   const keys = Array.from(gameGrid.keys());
 
   // eslint-disable-next-line no-restricted-syntax
   for (const key of keys) {
     const cell = gameGrid.get(key);
-    cell.useAlternateDisplayString = true;
+    cell.useDebugDisplay = true;
   }
 }
 

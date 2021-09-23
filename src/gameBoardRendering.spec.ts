@@ -11,7 +11,7 @@ describe('When rendering GameBoard', () => {
 
     gameBoard.addGuess(3, 3);
 
-    gameBoard.enableAlternateDisplayOption();
+    gameBoard.enableDebugDisplay();
 
     gameBoard.revealAll();
 

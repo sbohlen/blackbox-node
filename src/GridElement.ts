@@ -3,17 +3,17 @@ import { Point } from './point';
 export abstract class GridElement {
   constructor(readonly point: Point) {}
 
-  useAlternateDisplayString: boolean = false;
+  useDebugDisplay: boolean = false;
 
   toDisplayString(): string {
-    if (this.useAlternateDisplayString) {
-      return this.buildAlternateDisplayString();
+    if (this.useDebugDisplay) {
+      return this.buildDebugDisplayString();
     }
 
     return this.buildDefaultDisplayString();
   }
 
-  buildAlternateDisplayString(): string {
+  buildDebugDisplayString(): string {
     const valueToDisplay =
       this.buildDefaultDisplayString() === ''
         ? ''
