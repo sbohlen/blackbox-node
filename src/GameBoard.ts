@@ -1,11 +1,14 @@
+import { BoardEdge } from './BoardEdge';
 import { buildGameGrid } from './buildGameGrid';
 import { buildGridAnnotations } from './buildGridAnnotations';
+import { Direction } from './Direction';
 import { GameGrid } from './GameGrid';
 import { GameStatistics } from './GameStatistics';
+import { getNextLetter } from './getNextCharacter';
 import { GridAnnotations } from './GridAnnotations';
 import { notNullOrUndefined } from './notNullOrUndefined';
 import { Point } from './point';
-import { Direction, traceRay } from './rayTracer';
+import { traceRay } from './rayTracer';
 import {
   addGuess,
   applyTraceResult,
@@ -17,19 +20,14 @@ import {
   updateAnnotation,
 } from './updateGameBoard';
 
-export enum BoardEdge {
-  Top = 'Top',
-  Bottom = 'Bottom',
-  Left = 'Left',
-  Right = 'Right',
-}
-
 export class GameBoard {
   #gameGrid: GameGrid;
 
   #gridAnnotations: GridAnnotations;
 
   #rayCounter: number;
+
+  #lastUsedAnnotationValue: string;
 
   get GameGrid() {
     return this.#gameGrid;
@@ -52,6 +50,22 @@ export class GameBoard {
 
     this.#gameGrid = buildGameGrid(dimensionX, dimensionY, atomCount);
     this.#gridAnnotations = buildGridAnnotations(dimensionX, dimensionY);
+  }
+
+  getNextAnnotationValue(): string {
+    // if we already have a valid prior value...
+    if (notNullOrUndefined(this.#lastUsedAnnotationValue)) {
+      // ...increment the field to the next letter
+      this.#lastUsedAnnotationValue = getNextLetter(
+        this.#lastUsedAnnotationValue,
+      );
+    } else {
+      // ...set the initial letter
+      this.#lastUsedAnnotationValue = 'A';
+    }
+
+    // ... as a last step, return the actual value
+    return this.#lastUsedAnnotationValue;
   }
 
   sendRay(entryEdge: BoardEdge, cellIndex: number) {
@@ -84,7 +98,15 @@ export class GameBoard {
     const traceResult = traceRay(entryPoint, this.GameGrid, entryDirection);
 
     // TODO: update the annotation(s) accordingly
-    applyTraceResult(traceResult, this.GridAnnotations);
+    applyTraceResult(
+      entryPoint,
+      traceResult,
+      entryEdge,
+      this.GameGrid,
+      this.GridAnnotations,
+      this.getNextAnnotationValue,
+    );
+
     // increment the counter for later scoring
     this.#rayCounter += 1;
   }
@@ -105,6 +127,7 @@ export class GameBoard {
     enableDebugDisplay(this.GameGrid);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   updateAnnotation(point: Point, annotations: GridAnnotations, value: string) {
     updateAnnotation(point, annotations, value);
   }
