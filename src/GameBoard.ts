@@ -8,6 +8,7 @@ import { Point } from './point';
 import { Direction, traceRay } from './rayTracer';
 import {
   addGuess,
+  applyTraceResult,
   correctGuessCount,
   enableDebugDisplay,
   incorrectGuessCount,
@@ -83,7 +84,7 @@ export class GameBoard {
     const traceResult = traceRay(entryPoint, this.GameGrid, entryDirection);
 
     // TODO: update the annotation(s) accordingly
-    updateAnnotation(traceResult, this.GridAnnotations);
+    applyTraceResult(traceResult, this.GridAnnotations);
     // increment the counter for later scoring
     this.#rayCounter += 1;
   }
@@ -102,6 +103,10 @@ export class GameBoard {
 
   enableDebugDisplay() {
     enableDebugDisplay(this.GameGrid);
+  }
+
+  updateAnnotation(point: Point, annotations: GridAnnotations, value: string) {
+    updateAnnotation(point, annotations, value);
   }
 
   getGameStatistics(): GameStatistics {

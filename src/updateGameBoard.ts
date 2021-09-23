@@ -46,6 +46,15 @@ export function incorrectGuessCount(gameGrid: GameGrid): number {
 }
 
 export function updateAnnotation(
+  point: Point,
+  annotations: GridAnnotations,
+  value: string,
+) {
+  const element = annotations.get(point.toIdString());
+  element.annotation = value;
+}
+
+export function applyTraceResult(
   traceResult: TraceResult,
   gridAnnotations: GridAnnotations,
 ): number {

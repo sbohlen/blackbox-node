@@ -1,4 +1,5 @@
 import { GameBoard } from './GameBoard';
+import { Point } from './point';
 import { render } from './renderGameBoard';
 
 describe('When rendering GameBoard', () => {
@@ -10,6 +11,12 @@ describe('When rendering GameBoard', () => {
     const gameBoard = new GameBoard(dimensionX, dimensionY, atomCount);
 
     gameBoard.addGuess(3, 3);
+
+    gameBoard.updateAnnotation(
+      new Point(5, 0),
+      gameBoard.GridAnnotations,
+      'hello',
+    );
 
     gameBoard.enableDebugDisplay();
 
