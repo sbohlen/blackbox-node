@@ -1,7 +1,9 @@
 export class GameStatistics {
-  raysShot: number;
+  rayCount: number;
 
-  correctGuesses: number;
+  correctGuessCount: number;
 
-  incorrectGuesses: number;
+  incorrectGuessCount: number;
+
+  atomCount: number;
 }

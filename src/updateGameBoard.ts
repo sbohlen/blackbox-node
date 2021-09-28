@@ -1,5 +1,7 @@
 import { AnnotationDisplayString } from './AnnotationDisplayString';
+import { applyToAllGameGridCells } from './applyToAllGameGridCells';
 import { BoardEdge } from './BoardEdge';
+import { Cell } from './Cell';
 import { GameGrid } from './GameGrid';
 import { GridAnnotations } from './GridAnnotations';
 import { Point } from './point';
@@ -16,23 +18,17 @@ export function removeGuess(point: Point, gameGrid: GameGrid) {
 }
 
 export function revealAll(gameGrid: GameGrid) {
-  const keys = Array.from(gameGrid.keys());
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const key of keys) {
-    const cell = gameGrid.get(key);
+  applyToAllGameGridCells(gameGrid, (cell: Cell) => {
+    // eslint-disable-next-line no-param-reassign
     cell.isRevealMode = true;
-  }
+  });
 }
 
 export function enableDebugDisplay(gameGrid: GameGrid) {
-  const keys = Array.from(gameGrid.keys());
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const key of keys) {
-    const cell = gameGrid.get(key);
+  applyToAllGameGridCells(gameGrid, (cell: Cell) => {
+    // eslint-disable-next-line no-param-reassign
     cell.useDebugDisplay = true;
-  }
+  });
 }
 
 export function correctGuessCount(gameGrid: GameGrid): number {

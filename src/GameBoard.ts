@@ -29,6 +29,8 @@ export class GameBoard {
 
   #lastUsedAnnotationValue: string;
 
+  #atomCount: number;
+
   get GameGrid() {
     return this.#gameGrid;
   }
@@ -50,6 +52,8 @@ export class GameBoard {
 
     this.#gameGrid = buildGameGrid(dimensionX, dimensionY, atomCount);
     this.#gridAnnotations = buildGridAnnotations(dimensionX, dimensionY);
+
+    this.#atomCount = atomCount;
   }
 
   getNextAnnotationValue(): string {
@@ -135,9 +139,10 @@ export class GameBoard {
   getGameStatistics(): GameStatistics {
     const stats = new GameStatistics();
 
-    stats.raysShot = this.#rayCounter;
-    stats.correctGuesses = correctGuessCount(this.GameGrid);
-    stats.incorrectGuesses = incorrectGuessCount(this.GameGrid);
+    stats.atomCount = this.#atomCount;
+    stats.rayCount = this.#rayCounter;
+    stats.correctGuessCount = correctGuessCount(this.GameGrid);
+    stats.incorrectGuessCount = incorrectGuessCount(this.GameGrid);
 
     return stats;
   }
