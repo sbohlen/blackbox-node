@@ -108,7 +108,7 @@ export class GameBoard {
       entryEdge,
       this.GameGrid,
       this.GridAnnotations,
-      this.getNextAnnotationValue,
+      () => this.getNextAnnotationValue(),
     );
 
     // increment the counter for later scoring
