@@ -21,22 +21,22 @@ import {
 } from './updateGameBoard';
 
 export class GameBoard {
-  #gameGrid: GameGrid;
+  private gameGrid: GameGrid;
 
-  #gridAnnotations: GridAnnotations;
+  private gridAnnotations: GridAnnotations;
 
-  #rayCounter: number;
+  private rayCounter: number;
 
-  #lastUsedAnnotationValue: string;
+  private lastUsedAnnotationValue: string;
 
-  #atomCount: number;
+  private atomCount: number;
 
   get GameGrid() {
-    return this.#gameGrid;
+    return this.gameGrid;
   }
 
   get GridAnnotations() {
-    return this.#gridAnnotations;
+    return this.gridAnnotations;
   }
 
   constructor(dimensionX: number, dimensionY: number, atomCount: number) {
@@ -50,26 +50,26 @@ export class GameBoard {
       throw new Error(validationErrors.join(', '));
     }
 
-    this.#gameGrid = buildGameGrid(dimensionX, dimensionY, atomCount);
-    this.#gridAnnotations = buildGridAnnotations(dimensionX, dimensionY);
+    this.gameGrid = buildGameGrid(dimensionX, dimensionY, atomCount);
+    this.gridAnnotations = buildGridAnnotations(dimensionX, dimensionY);
 
-    this.#atomCount = atomCount;
+    this.atomCount = atomCount;
   }
 
   getNextAnnotationValue(): string {
     // if we already have a valid prior value...
-    if (notNullOrUndefined(this.#lastUsedAnnotationValue)) {
+    if (notNullOrUndefined(this?.lastUsedAnnotationValue)) {
       // ...increment the field to the next letter
-      this.#lastUsedAnnotationValue = getNextLetter(
-        this.#lastUsedAnnotationValue,
+      this.lastUsedAnnotationValue = getNextLetter(
+        this.lastUsedAnnotationValue,
       );
     } else {
       // ...set the initial letter
-      this.#lastUsedAnnotationValue = 'A';
+      this.lastUsedAnnotationValue = 'A';
     }
 
     // ... as a last step, return the actual value
-    return this.#lastUsedAnnotationValue;
+    return this.lastUsedAnnotationValue;
   }
 
   sendRay(entryEdge: BoardEdge, cellIndex: number) {
@@ -112,7 +112,7 @@ export class GameBoard {
     );
 
     // increment the counter for later scoring
-    this.#rayCounter += 1;
+    this.rayCounter += 1;
   }
 
   addGuess(x: number, y: number) {
@@ -139,8 +139,8 @@ export class GameBoard {
   getGameStatistics(): GameStatistics {
     const stats = new GameStatistics();
 
-    stats.atomCount = this.#atomCount;
-    stats.rayCount = this.#rayCounter;
+    stats.atomCount = this.atomCount;
+    stats.rayCount = this.rayCounter;
     stats.correctGuessCount = correctGuessCount(this.GameGrid);
     stats.incorrectGuessCount = incorrectGuessCount(this.GameGrid);
 
