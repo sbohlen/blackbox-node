@@ -58,7 +58,7 @@ export class GameBoard {
 
   getNextAnnotationValue(): string {
     // if we already have a valid prior value...
-    if (notNullOrUndefined(this?.lastUsedAnnotationValue)) {
+    if (notNullOrUndefined(this.lastUsedAnnotationValue)) {
       // ...increment the field to the next letter
       this.lastUsedAnnotationValue = getNextLetter(
         this.lastUsedAnnotationValue,
