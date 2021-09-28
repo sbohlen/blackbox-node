@@ -14,7 +14,7 @@
     "lint:fix": "run-s lint:prettier:fix lint:eslint:fix",
     "lint": "run-s lint:prettier lint:eslint",
     "start": "run-s build && node ./dist/index.js",
-    "test": "jest maxWorkers=25%",
+    "test": "jest --maxWorkers=25%",
     "test:debug": "jest",
     "test:coverage": "jest --coverage",
     "test:verbose": "jest --verbose",
