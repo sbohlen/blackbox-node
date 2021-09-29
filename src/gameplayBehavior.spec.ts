@@ -1,3 +1,4 @@
+import { AnnotationDisplayString } from './AnnotationDisplayString';
 import { BoardEdge } from './BoardEdge';
 import { GameBoard } from './GameBoard';
 import { Point } from './point';
@@ -50,6 +51,93 @@ describe.each`
       expect(
         gameBoard.GridAnnotations.get(exitPoint.toIdString()).toDisplayString(),
       ).toEqual('A');
+    });
+  },
+);
+
+describe.each`
+  entryPointX | entryPointY | entryCellIndex | entryBoardEdge
+  ${5}        | ${0}        | ${5}           | ${BoardEdge.Bottom}
+  ${5}        | ${11}       | ${5}           | ${BoardEdge.Top}
+  ${0}        | ${5}        | ${5}           | ${BoardEdge.Left}
+  ${11}       | ${5}        | ${5}           | ${BoardEdge.Right}
+`(
+  'When shooting a rays that are a HIT',
+  ({ entryPointX, entryPointY, entryCellIndex, entryBoardEdge }) => {
+    const dimensionX = 10;
+    const dimensionY = 10;
+    const atomCount = 1;
+
+    const atomPoint = new Point(5, 5);
+
+    const entryPoint = new Point(entryPointX, entryPointY);
+
+    const gameBoard = new GameBoard(dimensionX, dimensionY, atomCount);
+
+    utilityClearAllAtomsFromBoard(gameBoard);
+
+    // set single atom at expected location
+    gameBoard.GameGrid.get(atomPoint.toIdString()).hasAtom = true;
+
+    // send the ray that will HIT the single atom
+    gameBoard.sendRay(entryBoardEdge, entryCellIndex);
+
+    it('should set entry annotation correctly', () => {
+      expect(
+        gameBoard.GridAnnotations.get(
+          entryPoint.toIdString(),
+        ).toDisplayString(),
+      ).toEqual(AnnotationDisplayString.hit);
+    });
+  },
+);
+
+describe.each`
+  entryPointX | entryPointY | entryCellIndex | entryBoardEdge      | expectedAnnotation
+  ${5}        | ${0}        | ${5}           | ${BoardEdge.Bottom} | ${AnnotationDisplayString.reflectBottom}
+  ${5}        | ${11}       | ${5}           | ${BoardEdge.Top}    | ${AnnotationDisplayString.reflectTop}
+  ${0}        | ${5}        | ${5}           | ${BoardEdge.Left}   | ${AnnotationDisplayString.reflectLeft}
+  ${11}       | ${5}        | ${5}           | ${BoardEdge.Right}  | ${AnnotationDisplayString.reflectRight}
+`(
+  'When shooting a rays that are a REFLECT',
+  ({
+    entryPointX,
+    entryPointY,
+    entryCellIndex,
+    entryBoardEdge,
+    expectedAnnotation,
+  }) => {
+    const dimensionX = 10;
+    const dimensionY = 10;
+    const atomCount = 1;
+
+    // setup necessary atoms to reflect
+    const atomPoints = new Array<Point>();
+    atomPoints.push(new Point(4, 4));
+    atomPoints.push(new Point(6, 4));
+    atomPoints.push(new Point(4, 6));
+    atomPoints.push(new Point(6, 6));
+
+    const entryPoint = new Point(entryPointX, entryPointY);
+
+    const gameBoard = new GameBoard(dimensionX, dimensionY, atomCount);
+
+    utilityClearAllAtomsFromBoard(gameBoard);
+
+    // set all atoms at expected location
+    atomPoints.forEach((ap) => {
+      gameBoard.GameGrid.get(ap.toIdString()).hasAtom = true;
+    });
+
+    // send the ray that will be REFLECTED by the collection of atoms
+    gameBoard.sendRay(entryBoardEdge, entryCellIndex);
+
+    it('should set entry annotation correctly', () => {
+      expect(
+        gameBoard.GridAnnotations.get(
+          entryPoint.toIdString(),
+        ).toDisplayString(),
+      ).toEqual(expectedAnnotation);
     });
   },
 );
