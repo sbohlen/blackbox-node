@@ -11,24 +11,46 @@ function clearAllAtomsFromBoard(gameBoard: GameBoard) {
   });
 }
 
-describe('the GAME-PLAY test', () => {
-  const dimensionX = 10;
-  const dimensionY = 10;
-  const atomCount = 1;
+describe.each`
+  entryPointX | entryPointY | exitPointX | exitPointY | entryBoardEdge
+  ${2}        | ${0}        | ${2}       | ${11}      | ${BoardEdge.Bottom}
+  ${2}        | ${11}       | ${2}       | ${0}       | ${BoardEdge.Top}
+  ${0}        | ${2}        | ${11}      | ${2}       | ${BoardEdge.Left}
+  ${11}       | ${2}        | ${0}       | ${2}       | ${BoardEdge.Right}
+`(
+  'When shooting a rays that are a MISS',
+  ({ entryPointX, entryPointY, exitPointX, exitPointY, entryBoardEdge }) => {
+    const dimensionX = 10;
+    const dimensionY = 10;
+    const atomCount = 1;
 
-  const atomPoint = new Point(5, 5);
+    const atomPoint = new Point(5, 5);
 
-  const gameBoard = new GameBoard(dimensionX, dimensionY, atomCount);
+    const entryPoint = new Point(entryPointX, entryPointY);
+    const exitPoint = new Point(exitPointX, exitPointY);
 
-  clearAllAtomsFromBoard(gameBoard);
+    const gameBoard = new GameBoard(dimensionX, dimensionY, atomCount);
 
-  // set single atom at expected location
-  gameBoard.GameGrid.get(atomPoint.toIdString()).hasAtom = true;
+    clearAllAtomsFromBoard(gameBoard);
 
-  // send the ray that will NOT be influenced by the single atom
-  gameBoard.sendRay(BoardEdge.Bottom, 2);
+    // set single atom at expected location
+    gameBoard.GameGrid.get(atomPoint.toIdString()).hasAtom = true;
 
-  it('should set entry annotation correctly', () => {
-    expect(gameBoard.GridAnnotations.get('2,0').toDisplayString()).toEqual('A');
-  });
-});
+    // send the ray that will NOT be influenced by the single atom
+    gameBoard.sendRay(entryBoardEdge, entryPointX);
+
+    it('should set entry annotation correctly', () => {
+      expect(
+        gameBoard.GridAnnotations.get(
+          entryPoint.toIdString(),
+        ).toDisplayString(),
+      ).toEqual('A');
+    });
+
+    it('should set exit annotation correctly', () => {
+      expect(
+        gameBoard.GridAnnotations.get(exitPoint.toIdString()).toDisplayString(),
+      ).toEqual('A');
+    });
+  },
+);
