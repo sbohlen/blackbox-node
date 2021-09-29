@@ -72,7 +72,10 @@ export class GameBoard {
     return this.lastUsedAnnotationValue;
   }
 
-  sendRay(entryEdge: BoardEdge, cellIndex: number) {
+  private determineEntryPointAndDirection(
+    entryEdge: BoardEdge,
+    cellIndex: number,
+  ): [Point, Direction] {
     let entryPoint: Point;
     let entryDirection: Direction;
 
@@ -97,6 +100,15 @@ export class GameBoard {
       default:
         throw new Error(`Invalid entryEdge: '${entryEdge}' provided!`); // should NEVER get here
     }
+
+    return [entryPoint, entryDirection];
+  }
+
+  sendRay(entryEdge: BoardEdge, cellIndex: number) {
+    const [entryPoint, entryDirection] = this.determineEntryPointAndDirection(
+      entryEdge,
+      cellIndex,
+    );
 
     // actually do the trace
     const traceResult = traceRay(entryPoint, this.GameGrid, entryDirection);
