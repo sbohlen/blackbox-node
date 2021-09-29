@@ -4,14 +4,21 @@ import { Point } from './point';
 import { utilityClearAllAtomsFromBoard } from './utilityClearAllAtomsFromBoard';
 
 describe.each`
-  entryPointX | entryPointY | exitPointX | exitPointY | entryBoardEdge
-  ${2}        | ${0}        | ${2}       | ${11}      | ${BoardEdge.Bottom}
-  ${2}        | ${11}       | ${2}       | ${0}       | ${BoardEdge.Top}
-  ${0}        | ${2}        | ${11}      | ${2}       | ${BoardEdge.Left}
-  ${11}       | ${2}        | ${0}       | ${2}       | ${BoardEdge.Right}
+  entryPointX | entryPointY | exitPointX | exitPointY | entryCellIndex | entryBoardEdge
+  ${2}        | ${0}        | ${2}       | ${11}      | ${2}           | ${BoardEdge.Bottom}
+  ${2}        | ${11}       | ${2}       | ${0}       | ${2}           | ${BoardEdge.Top}
+  ${0}        | ${2}        | ${11}      | ${2}       | ${2}           | ${BoardEdge.Left}
+  ${11}       | ${2}        | ${0}       | ${2}       | ${2}           | ${BoardEdge.Right}
 `(
   'When shooting a rays that are a MISS',
-  ({ entryPointX, entryPointY, exitPointX, exitPointY, entryBoardEdge }) => {
+  ({
+    entryPointX,
+    entryPointY,
+    exitPointX,
+    exitPointY,
+    entryCellIndex,
+    entryBoardEdge,
+  }) => {
     const dimensionX = 10;
     const dimensionY = 10;
     const atomCount = 1;
@@ -29,7 +36,7 @@ describe.each`
     gameBoard.GameGrid.get(atomPoint.toIdString()).hasAtom = true;
 
     // send the ray that will NOT be influenced by the single atom
-    gameBoard.sendRay(entryBoardEdge, entryPointX);
+    gameBoard.sendRay(entryBoardEdge, entryCellIndex);
 
     it('should set entry annotation correctly', () => {
       expect(
