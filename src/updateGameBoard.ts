@@ -55,10 +55,10 @@ export function updateAnnotation(
 function getReflectionDisplayStringFor(entryEdge: BoardEdge): string {
   switch (entryEdge) {
     case BoardEdge.Top:
-      return AnnotationDisplayString.reflectDown;
+      return AnnotationDisplayString.reflectTop;
 
     case BoardEdge.Bottom:
-      return AnnotationDisplayString.reflectUp;
+      return AnnotationDisplayString.reflectBottom;
 
     case BoardEdge.Left:
       return AnnotationDisplayString.reflectLeft;

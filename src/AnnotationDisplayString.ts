@@ -1,9 +1,9 @@
 export class AnnotationDisplayString {
   static readonly hit = '!';
 
-  static readonly reflectUp = '^';
+  static readonly reflectBottom = '^';
 
-  static readonly reflectDown = 'v';
+  static readonly reflectTop = 'v';
 
   static readonly reflectLeft = '>';
 
