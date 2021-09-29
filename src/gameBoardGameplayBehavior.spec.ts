@@ -11,7 +11,7 @@ describe.each`
   ${0}        | ${2}        | ${11}      | ${2}       | ${2}           | ${BoardEdge.Left}
   ${11}       | ${2}        | ${0}       | ${2}       | ${2}           | ${BoardEdge.Right}
 `(
-  'When shooting a rays that are a STRAIGHT MISS',
+  'When shooting rays that are a STRAIGHT MISS',
   ({
     entryPointX,
     entryPointY,
@@ -62,7 +62,7 @@ describe.each`
   ${0}        | ${6}        | ${4}       | ${11}      | ${6}           | ${BoardEdge.Left}
   ${11}       | ${6}        | ${6}       | ${11}      | ${6}           | ${BoardEdge.Right}
 `(
-  'When shooting a rays that are a DEFLECTED MISS',
+  'When shooting rays that are a DEFLECTED MISS',
   ({
     entryPointX,
     entryPointY,
@@ -113,7 +113,7 @@ describe.each`
   ${0}        | ${5}        | ${5}           | ${BoardEdge.Left}
   ${11}       | ${5}        | ${5}           | ${BoardEdge.Right}
 `(
-  'When shooting a rays that are a HIT',
+  'When shooting rays that are a HIT',
   ({ entryPointX, entryPointY, entryCellIndex, entryBoardEdge }) => {
     const dimensionX = 10;
     const dimensionY = 10;
@@ -150,7 +150,7 @@ describe.each`
   ${0}        | ${5}        | ${5}           | ${BoardEdge.Left}   | ${AnnotationDisplayString.reflectLeft}
   ${11}       | ${5}        | ${5}           | ${BoardEdge.Right}  | ${AnnotationDisplayString.reflectRight}
 `(
-  'When shooting a rays that are a REFLECT',
+  'When shooting rays that are a REFLECT',
   ({
     entryPointX,
     entryPointY,

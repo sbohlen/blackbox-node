@@ -71,7 +71,7 @@ function getReflectionDisplayStringFor(entryEdge: BoardEdge): string {
   }
 }
 
-export function applyTraceResult(
+export function applyTraceResultToBoard(
   entryPoint: Point,
   traceResult: TraceResult,
   entryEdge: BoardEdge,

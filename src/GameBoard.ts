@@ -11,7 +11,7 @@ import { Point } from './point';
 import { traceRay } from './rayTracer';
 import {
   addGuess,
-  applyTraceResult,
+  applyTraceResultToBoard,
   correctGuessCount,
   enableDebugDisplay,
   incorrectGuessCount,
@@ -113,8 +113,8 @@ export class GameBoard {
     // actually do the trace
     const traceResult = traceRay(entryPoint, this.GameGrid, entryDirection);
 
-    // TODO: update the annotation(s) accordingly
-    applyTraceResult(
+    // update the annotation(s) accordingly
+    applyTraceResultToBoard(
       entryPoint,
       traceResult,
       entryEdge,
