@@ -1,15 +1,7 @@
-import { applyToAllGameGridCells } from './applyToAllGameGridCells';
 import { BoardEdge } from './BoardEdge';
-import { Cell } from './Cell';
 import { GameBoard } from './GameBoard';
 import { Point } from './point';
-
-function clearAllAtomsFromBoard(gameBoard: GameBoard) {
-  applyToAllGameGridCells(gameBoard.GameGrid, (cell: Cell) => {
-    // eslint-disable-next-line no-param-reassign
-    cell.hasAtom = false;
-  });
-}
+import { utilityClearAllAtomsFromBoard } from './utilityClearAllAtomsFromBoard';
 
 describe.each`
   entryPointX | entryPointY | exitPointX | exitPointY | entryBoardEdge
@@ -31,7 +23,7 @@ describe.each`
 
     const gameBoard = new GameBoard(dimensionX, dimensionY, atomCount);
 
-    clearAllAtomsFromBoard(gameBoard);
+    utilityClearAllAtomsFromBoard(gameBoard);
 
     // set single atom at expected location
     gameBoard.GameGrid.get(atomPoint.toIdString()).hasAtom = true;
