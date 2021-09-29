@@ -1,6 +1,7 @@
 import { CellDisplayString } from './CellDisplayString';
 import { GameBoard } from './GameBoard';
 import { Point } from './point';
+import { utilityClearAllAtomsFromBoard } from './utilityClearAllAtomsFromBoard';
 
 const dimensionX = 10;
 const dimensionY = 10;
@@ -56,6 +57,9 @@ describe('When revealing the board', () => {
 
       // add the guess
       board.addGuess(guessX, guessY);
+
+      // remove all existing atoms from the board
+      utilityClearAllAtomsFromBoard(board);
 
       // ensure the desired cell has the necessary atom
       board.GameGrid.get(new Point(atomX, atomY).toIdString()).hasAtom = true;
