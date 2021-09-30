@@ -135,22 +135,22 @@ export function applyTraceResultToBoard(
 
   // determine the coordinates of the exit annotation cell
 
-  if (traceResult.finalPoint.X === gameGrid.minX) {
+  if (traceResult.exitEdge === BoardEdge.Left) {
     exitAnnotationX = traceResult.finalPoint.X - 1;
     exitAnnotationY = traceResult.finalPoint.Y;
   }
 
-  if (traceResult.finalPoint.X === gameGrid.maxX) {
+  if (traceResult.exitEdge === BoardEdge.Right) {
     exitAnnotationX = traceResult.finalPoint.X + 1;
     exitAnnotationY = traceResult.finalPoint.Y;
   }
 
-  if (traceResult.finalPoint.Y === gameGrid.minY) {
+  if (traceResult.exitEdge === BoardEdge.Bottom) {
     exitAnnotationX = traceResult.finalPoint.X;
     exitAnnotationY = traceResult.finalPoint.Y - 1;
   }
 
-  if (traceResult.finalPoint.Y === gameGrid.maxY) {
+  if (traceResult.exitEdge === BoardEdge.Top) {
     exitAnnotationX = traceResult.finalPoint.X;
     exitAnnotationY = traceResult.finalPoint.Y + 1;
   }
