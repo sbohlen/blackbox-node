@@ -1,3 +1,4 @@
+import { BoardEdge } from './BoardEdge';
 import { Cell } from './Cell';
 import { CellAnalysisResult } from './CellAnalysisResult';
 import { Direction } from './Direction';
@@ -238,6 +239,8 @@ export class TraceResult {
   isReflect?: boolean = false;
 
   finalPoint?: Point;
+
+  exitEdge?: BoardEdge;
 }
 
 function translateToActualFinalPoint(
