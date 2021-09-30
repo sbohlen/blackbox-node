@@ -1,6 +1,10 @@
+/* eslint-disable max-len */
+import { BoardEdge } from './BoardEdge';
 import { CellDisplayString } from './CellDisplayString';
 import { GameBoard } from './GameBoard';
 import { Point } from './point';
+import { TraceResult } from './rayTracer';
+import { applyTraceResultToBoard } from './updateGameBoard';
 import { utilityClearAllAtomsFromBoard } from './utilityClearAllAtomsFromBoard';
 
 const dimensionX = 10;
@@ -77,3 +81,50 @@ describe('When revealing the board', () => {
     },
   );
 });
+
+describe.each`
+  testCaseName                       | entryPoint          | entryEdge           | finalPoint          | annotationCell1 | annotationCell2
+  ${'entry from right not at edge'}  | ${new Point(10, 2)} | ${BoardEdge.Right}  | ${new Point(1, 2)}  | ${'11,2'}       | ${'0,2'}
+  ${'entry from right at edge'}      | ${new Point(10, 1)} | ${BoardEdge.Right}  | ${new Point(1, 1)}  | ${'11,1'}       | ${'0,1'}
+  ${'entry from left not at edge'}   | ${new Point(1, 2)}  | ${BoardEdge.Left}   | ${new Point(10, 2)} | ${'11,2'}       | ${'0,2'}
+  ${'entry from left at edge'}       | ${new Point(1, 1)}  | ${BoardEdge.Left}   | ${new Point(10, 1)} | ${'11,1'}       | ${'0,1'}
+  ${'entry from bottom not at edge'} | ${new Point(2, 1)}  | ${BoardEdge.Bottom} | ${new Point(2, 10)} | ${'2,0'}        | ${'2,11'}
+  ${'entry from bottom at edge'}     | ${new Point(1, 1)}  | ${BoardEdge.Bottom} | ${new Point(1, 10)} | ${'1,0'}        | ${'1,11'}
+  ${'entry from top not at edge'}    | ${new Point(2, 10)} | ${BoardEdge.Top}    | ${new Point(2, 1)}  | ${'2,0'}        | ${'2,11'}
+  ${'entry from top at edge'}        | ${new Point(1, 10)} | ${BoardEdge.Top}    | ${new Point(1, 1)}  | ${'1,0'}        | ${'1,11'}
+`(
+  'When updating annotations',
+  ({
+    testCaseName,
+    entryPoint,
+    entryEdge,
+    finalPoint,
+    annotationCell1,
+    annotationCell2,
+  }) => {
+    it(`${testCaseName} > should assign expected annotations`, () => {
+      const board = new GameBoard(10, 10, 1);
+      utilityClearAllAtomsFromBoard(board);
+
+      const traceResult = new TraceResult();
+
+      traceResult.finalPoint = finalPoint;
+
+      applyTraceResultToBoard(
+        entryPoint,
+        traceResult,
+        entryEdge,
+        board.GameGrid,
+        board.GridAnnotations,
+        () => board.getNextAnnotationValue(),
+      );
+
+      expect(
+        board.GridAnnotations.get(annotationCell1).toDisplayString(),
+      ).toEqual('A');
+      expect(
+        board.GridAnnotations.get(annotationCell2).toDisplayString(),
+      ).toEqual('A');
+    });
+  },
+);
