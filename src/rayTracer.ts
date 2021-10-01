@@ -261,6 +261,23 @@ function translateToActualFinalPoint(
   }
 }
 
+function translateExitDirectionToBoardEdge(
+  entryDirection: Direction,
+): BoardEdge {
+  switch (entryDirection) {
+    case Direction.Up:
+      return BoardEdge.Top;
+    case Direction.Down:
+      return BoardEdge.Bottom;
+    case Direction.Left:
+      return BoardEdge.Left;
+    case Direction.Right:
+      return BoardEdge.Right;
+    default:
+      throw new Error(`Invalid direction: ${entryDirection}`);
+  }
+}
+
 // create a dictionary of the rotation angle necessary for each entry vector direction
 const rotationValueMap = new Map<Direction, number>();
 rotationValueMap.set(Direction.Down, 180);
@@ -345,8 +362,10 @@ export function traceRay(
       exitDirection,
     );
 
+    const exitEdge = translateExitDirectionToBoardEdge(exitDirection);
+
     // return the counter-rotated point as the final
-    return { finalPoint: translatedFinalPoint };
+    return { finalPoint: translatedFinalPoint, exitEdge };
   }
 
   throw new Error('No hit, no reflect, no point returned; should never happen');
