@@ -1,5 +1,6 @@
 import { BoardEdge } from './BoardEdge';
 import { GameBoard } from './GameBoard';
+import { render } from './renderGameBoard';
 import { utilityClearAllAtomsFromBoard } from './utilityClearAllAtomsFromBoard';
 
 describe('When firing all rays on an empty game board', () => {
@@ -13,14 +14,8 @@ describe('When firing all rays on an empty game board', () => {
 
     utilityClearAllAtomsFromBoard(gameBoard);
 
-    // add a few guesses (TODO: remove this)
-    gameBoard.addGuess(2, 5);
-    gameBoard.addGuess(6, 7);
-
     // iterate each annotation slot (traverse the X axis)
     for (let x = 1; x <= dimensionX; x += 1) {
-      // eslint-disable-next-line no-console
-      console.log(`iteration: ${x}`);
       gameBoard.sendRay(BoardEdge.Bottom, x);
 
       // if the annotation isn't already occupied, run a trace from it
@@ -37,14 +32,6 @@ describe('When firing all rays on an empty game board', () => {
         gameBoard.sendRay(BoardEdge.Right, y);
       }
     }
-    /*
-    gameBoard.revealAll();
-
-    const output = render(gameBoard);
-
-    // eslint-disable-next-line no-console
-    console.log(output.toString());
-    */
 
     const expectedHorizontalAnnotationSequence = [
       'A',
@@ -99,5 +86,13 @@ describe('When firing all rays on an empty game board', () => {
         gameBoard.GridAnnotations.get(`11,${i}`).toDisplayString(),
       ).toEqual(expectedVerticalAnnotationSequence[i - 1]);
     }
+
+    // next steps are to provide visual validation of results
+    gameBoard.revealAll();
+
+    const output = render(gameBoard);
+
+    // eslint-disable-next-line no-console
+    console.log(output.toString());
   });
 });
