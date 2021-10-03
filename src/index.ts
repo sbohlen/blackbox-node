@@ -1,27 +1,65 @@
+/* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
 import * as Prompts from 'prompts';
 
-function validateResponse(input: any): boolean | string {
-  const evaluation = input === 'hello' || input === 'exit';
+function validateLevelOneResponse(input: any): boolean | string {
+  switch (input) {
+    case 'hello':
+      return true;
 
-  if (evaluation) {
-    return true;
+    case 'exit':
+      return true;
+
+    case 'next':
+      return true;
+
+    default:
+      return `'${input}'' wasn't a good response, try again or 'exit' to quit`;
   }
-  return `'${input}'' wasn't a good response, try again or 'exit' to quit`;
+}
+
+function validateLevelTwoResponse(input: any): boolean | string {
+  switch (input) {
+    case 'hello2':
+      return true;
+
+    case 'back':
+      return true;
+
+    default:
+      return `'${input}'' wasn't a good response, try again or 'back' to return`;
+  }
 }
 
 (async () => {
-  let response: any;
+  let levelOneResponse: any;
 
-  while (response?.value !== 'exit') {
-    response = await Prompts.prompt({
+  while (levelOneResponse?.value !== 'exit') {
+    levelOneResponse = await Prompts.prompt({
       type: 'text',
       name: 'value',
-      message: "all values but 'hello' result in an error; type 'exit' to end:",
-      validate: validateResponse,
+      message: "commands: 'hello'; 'next' for sub-menu; type 'exit' to end:",
+      validate: validateLevelOneResponse,
     });
 
-    // eslint-disable-next-line no-console
-    console.log(response.value);
-  }
+    if (levelOneResponse?.value === 'hello') {
+      console.log('hello from the system!');
+    }
+
+    if (levelOneResponse?.value === 'next') {
+      let levelTwoResponse: any;
+      while (levelTwoResponse?.value !== 'back') {
+        levelTwoResponse = await Prompts.prompt({
+          type: 'text',
+          name: 'value',
+          message: "commands: 'hello2'; 'back' to return:",
+          validate: validateLevelTwoResponse,
+        });
+
+        console.log(levelTwoResponse.value);
+      } // while levelTwoResponse
+    }
+
+    console.log(levelOneResponse.value);
+  } // while levelOneResponse
 })();
