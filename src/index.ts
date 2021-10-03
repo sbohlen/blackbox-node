@@ -98,6 +98,71 @@ async function topPrompt(): Promise<TopMenuResponse> {
   return response;
 }
 
+function getSendRayCellIndexMin(previous): number {
+  if (
+    previous.BoardEdge === BoardEdge.Bottom ||
+    previous.BoardEdge === BoardEdge.Top
+  ) {
+    return gameBoard.GameGrid.minX;
+  }
+
+  return gameBoard.GameGrid.minY;
+}
+
+function getSendRayCellIndexMax(previous): number {
+  if (
+    previous.BoardEdge === BoardEdge.Bottom ||
+    previous.BoardEdge === BoardEdge.Top
+  ) {
+    return gameBoard.GameGrid.maxX;
+  }
+
+  return gameBoard.GameGrid.maxY;
+}
+
+async function sendRayPrompt(): Promise<SendRayResponse> {
+  const response: any = await Prompts.prompt([
+    {
+      type: 'select',
+      name: 'boardEdge',
+      message: 'Select edge of board from which to shoot the ray',
+      hint: '',
+      choices: [
+        {
+          title: 'Bottom',
+          description: 'Shoot the ray from the BOTTOM edge of the board',
+          value: BoardEdge.Bottom,
+        },
+        {
+          title: 'Top',
+          description: 'Shoot the ray from the TOP edge of the board',
+          value: BoardEdge.Top,
+        },
+        {
+          title: 'Left',
+          description: 'Shoot the ray from the LEFT edge of the board',
+          value: BoardEdge.Left,
+        },
+        {
+          title: 'Right',
+          description: 'Shoot the ray from the RIGHT edge of the board',
+          value: BoardEdge.Right,
+        },
+      ],
+    },
+    {
+      type: 'number',
+      name: 'cellIndex',
+      message:
+        'Enter the number of the cell along the selected edge from which to shoot the ray:',
+      min: getSendRayCellIndexMin,
+      max: getSendRayCellIndexMax,
+    },
+  ]);
+
+  return response;
+}
+
 async function newGamePrompt(): Promise<NewGameResponse> {
   const response: any = await Prompts.prompt([
     {
@@ -132,6 +197,11 @@ function validateNewGameResponse(response: NewGameResponse): boolean {
   return response.atomCount <= response.dimensionX * response.dimensionY;
 }
 
+type SendRayResponse = {
+  boardEdge: BoardEdge;
+  cellIndex: number;
+};
+
 type NewGameResponse = {
   dimensionX: number;
   dimensionY: number;
@@ -148,6 +218,10 @@ type GamePlayMenuResponse = {
 
 function renderGameBoard() {
   console.log(render(gameBoard).toString());
+}
+
+function renderGameBoardSymbolsKey() {
+  console.log('****SYMBOLS KEY HERE****');
 }
 
 function renderStatistics(isFinal: boolean): void {
@@ -178,8 +252,9 @@ async function handleRenderBoardGamePlayMenuSelection() {
 }
 
 async function handleSendRayGamePlayMenuSelection() {
-  console.log('sending a ray....!');
-  gameBoard.sendRay(BoardEdge.Bottom, 5);
+  const response = await sendRayPrompt();
+
+  gameBoard.sendRay(response.boardEdge, response.cellIndex);
   renderGameBoard();
 }
 
@@ -195,6 +270,7 @@ async function handleRevealBoardGamePlayMenuSelection() {
   gameBoard.revealAll();
   renderGameBoard();
   renderStatistics(true);
+  renderGameBoardSymbolsKey();
 }
 
 async function handleShowStatisticsGamePlayMenuSelection() {
