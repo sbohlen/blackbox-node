@@ -12,7 +12,58 @@ enum TopMenuSelection {
   exit = 'exit',
 }
 
+enum GamePlayMenuSelection {
+  sendRay = 'sendRay',
+  addGuess = 'addGuess',
+  removeGuess = 'removeGuess',
+  revealBoard = 'revealBoard',
+  showStatistics = 'showStatistics',
+  abortGamePlay = 'abortGamePlay',
+}
+
 async function topPrompt(): Promise<TopMenuResponse> {
+  const response: any = await Prompts.prompt({
+    type: 'select',
+    name: 'value',
+    message: 'select an option',
+    choices: [
+      {
+        title: 'New Ray',
+        description: 'Send a new Ray into the board',
+        value: GamePlayMenuSelection.sendRay,
+      },
+      {
+        title: 'Add Guess',
+        description: 'Add a new Guess to the board',
+        value: GamePlayMenuSelection.addGuess,
+      },
+      {
+        title: 'Remove Guess',
+        description: 'Remove an existing Guess from the board',
+        value: GamePlayMenuSelection.removeGuess,
+      },
+      {
+        title: 'Show Score',
+        description: 'Display current game statistics/score',
+        value: GamePlayMenuSelection.showStatistics,
+      },
+      {
+        title: 'End Game',
+        description: 'End the game and reveal the board',
+        value: GamePlayMenuSelection.revealBoard,
+      },
+      {
+        title: 'Cancel game',
+        description: 'Abort the game and exit',
+        value: GamePlayMenuSelection.abortGamePlay,
+      },
+    ],
+  });
+
+  return response;
+}
+
+async function gamePlayPrompt(): Promise<GamePlayMenuResponse> {
   const response: any = await Prompts.prompt({
     type: 'select',
     name: 'value',
@@ -71,11 +122,69 @@ type TopMenuResponse = {
   value: TopMenuSelection;
 };
 
-async function playGame(): Promise<void> {
-  console.log(render(gameBoard).toString());
+type GamePlayMenuResponse = {
+  value: GamePlayMenuSelection;
+};
+
+async function handleSendRayGamePlayMenuSelection() {
+  throw new Error('Function not implemented.');
 }
 
-async function handleNewGameSelection(
+async function handleAddGuessGamePlayMenuSelection() {
+  throw new Error('Function not implemented.');
+}
+
+async function handleRemoveGuessGamePlayMenuSelection() {
+  throw new Error('Function not implemented.');
+}
+
+async function handleRevealBoardGamePlayMenuSelection() {
+  throw new Error('Function not implemented.');
+}
+
+async function handleShowStatisticsGamePlayMenuSelection() {
+  throw new Error('Function not implemented.');
+}
+
+async function handleAbortGamePlayGamePlayMenuSelection() {
+  throw new Error('Function not implemented.');
+}
+
+async function playGame(): Promise<void> {
+  let gamePlayMenuSelection: GamePlayMenuResponse;
+
+  while (gamePlayMenuSelection?.value !== GamePlayMenuSelection.abortGamePlay) {
+    gamePlayMenuSelection = await gamePlayPrompt();
+
+    switch (gamePlayMenuSelection.value) {
+      case GamePlayMenuSelection.sendRay:
+        await handleSendRayGamePlayMenuSelection();
+        break;
+      case GamePlayMenuSelection.addGuess:
+        await handleAddGuessGamePlayMenuSelection();
+        break;
+      case GamePlayMenuSelection.removeGuess:
+        await handleRemoveGuessGamePlayMenuSelection();
+        break;
+      case GamePlayMenuSelection.revealBoard:
+        await handleRevealBoardGamePlayMenuSelection();
+        break;
+      case GamePlayMenuSelection.showStatistics:
+        await handleShowStatisticsGamePlayMenuSelection();
+        break;
+      case GamePlayMenuSelection.abortGamePlay:
+        await handleAbortGamePlayGamePlayMenuSelection();
+        break;
+      default:
+        throw new Error(
+          `invalid GamePlayMenuSelection:  ${gamePlayMenuSelection.value}`,
+        ); // should never happen
+    }
+
+    console.log(render(gameBoard).toString());
+  }
+}
+async function handleNewGameTopMenuSelection(
   response: NewGameResponse,
 ): Promise<void> {
   if (validateNewGameResponse(response)) {
@@ -97,11 +206,11 @@ async function handleNewGameSelection(
   }
 }
 
-async function handleTutorialSelection(): Promise<void> {
+async function handleTutorialTopMenuSelection(): Promise<void> {
   console.log('***TODO: tutorial goes here***');
 }
 
-async function handleExitSelection(): Promise<void> {
+async function handleExitTopMenuSelection(): Promise<void> {
   console.log('thanks for playing!');
 }
 
@@ -116,15 +225,15 @@ async function handleExitSelection(): Promise<void> {
     switch (topMenuSelection.value) {
       case TopMenuSelection.newGame:
         newGameResponse = await newGamePrompt();
-        await handleNewGameSelection(newGameResponse);
+        await handleNewGameTopMenuSelection(newGameResponse);
         break;
 
       case TopMenuSelection.tutorial:
-        await handleTutorialSelection();
+        await handleTutorialTopMenuSelection();
         break;
 
       case TopMenuSelection.exit:
-        await handleExitSelection();
+        await handleExitTopMenuSelection();
         break;
       default:
         throw new Error(`invalid selection: ${topMenuSelection.value}`); // should never happen
