@@ -20,6 +20,7 @@ enum GamePlayMenuSelection {
   revealBoard = 'revealBoard',
   showStatistics = 'showStatistics',
   abortGamePlay = 'abortGamePlay',
+  renderBoard = 'renderBoard',
 }
 
 async function gamePlayPrompt(): Promise<GamePlayMenuResponse> {
@@ -28,6 +29,11 @@ async function gamePlayPrompt(): Promise<GamePlayMenuResponse> {
     name: 'value',
     message: 'select an option',
     choices: [
+      {
+        title: 'Show Board',
+        description: 'Display the current game board',
+        value: GamePlayMenuSelection.renderBoard,
+      },
       {
         title: 'New Ray',
         description: 'Send a new Ray into the board',
@@ -131,10 +137,14 @@ function renderGameBoard() {
   console.log(render(gameBoard).toString());
 }
 
+async function handleRenderBoardGamePlayMenuSelection() {
+  renderGameBoard();
+}
+
 async function handleSendRayGamePlayMenuSelection() {
-  // throw new Error('Function not implemented.');
   console.log('sending a ray....!');
   gameBoard.sendRay(BoardEdge.Bottom, 5);
+  renderGameBoard();
 }
 
 async function handleAddGuessGamePlayMenuSelection() {
@@ -153,7 +163,7 @@ async function handleShowStatisticsGamePlayMenuSelection() {
   const stats = gameBoard.getGameStatistics();
   // TODO: should NOT display guess data here since game != over)
   console.log(JSON.stringify(stats));
-  renderGameBoard();
+  // renderGameBoard();
 }
 
 async function handleAbortGamePlayGamePlayMenuSelection() {
@@ -167,6 +177,9 @@ async function playGame(): Promise<void> {
     gamePlayMenuSelection = await gamePlayPrompt();
 
     switch (gamePlayMenuSelection.value) {
+      case GamePlayMenuSelection.renderBoard:
+        await handleRenderBoardGamePlayMenuSelection();
+        break;
       case GamePlayMenuSelection.sendRay:
         await handleSendRayGamePlayMenuSelection();
         break;
