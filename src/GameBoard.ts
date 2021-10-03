@@ -25,11 +25,11 @@ export class GameBoard {
 
   private gridAnnotations: GridAnnotations;
 
-  private rayCounter: number;
+  private rayCounter: number = 0;
 
   private lastUsedAnnotationValue: string;
 
-  private atomCount: number;
+  private atomCount: number = 0;
 
   get GameGrid() {
     return this.gameGrid;
