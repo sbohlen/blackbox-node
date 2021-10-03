@@ -2,75 +2,47 @@
 /* eslint-disable no-await-in-loop */
 import * as Prompts from 'prompts';
 
-function validateLevelOneResponse(input: any): boolean | string {
-  switch (input) {
-    case 'hello':
-      return true;
-
-    case 'exit':
-      return true;
-
-    case 'next':
-      return true;
-
-    default:
-      return `'${input}'' wasn't a good response, try again or 'exit' to quit`;
-  }
+enum TopMenuSelection {
+  newGame = 'newGame',
+  tutorial = 'tutorial',
+  exit = 'exit',
 }
 
-function validateLevelTwoResponse(input: any): boolean | string {
-  switch (input) {
-    case 'hello2':
-      return true;
-
-    case 'back':
-      return true;
-
-    default:
-      return `'${input}'' wasn't a good response, try again or 'back' to return`;
-  }
-}
-async function levelTwoMenu(): Promise<any> {
-  const levelTwoResponse = await Prompts.prompt({
-    type: 'text',
+async function displayTopPrompt(): Promise<any> {
+  const response: any = await Prompts.prompt({
+    type: 'select',
     name: 'value',
-    message: "commands: 'hello2'; 'back' to return:",
-    validate: validateLevelTwoResponse,
+    message: 'select an option',
+    choices: [
+      { title: 'Start a new game', value: TopMenuSelection.newGame },
+      { title: 'Tutorial', value: TopMenuSelection.tutorial },
+      { title: 'Exit/Quit', value: TopMenuSelection.exit },
+    ],
   });
 
-  return levelTwoResponse;
-}
-
-async function levelOneMenu(): Promise<any> {
-  const levelOneResponse: any = await Prompts.prompt({
-    type: 'text',
-    name: 'value',
-    message: "commands: 'hello'; 'next' for sub-menu; type 'exit' to end:",
-    validate: validateLevelOneResponse,
-  });
-
-  if (levelOneResponse?.value === 'hello') {
-    console.log('hello from the system!');
-  }
-
-  if (levelOneResponse?.value === 'next') {
-    let levelTwoResponse: any;
-    while (levelTwoResponse?.value !== 'back') {
-      levelTwoResponse = await levelTwoMenu();
-    }
-    // TODO: do we need this?
-    return levelTwoResponse;
-  }
-
-  return levelOneResponse;
+  return response;
 }
 
 (async () => {
-  let levelOneResponse: any;
+  let topMenuSelection: any;
 
-  while (levelOneResponse?.value !== 'exit') {
-    levelOneResponse = await levelOneMenu();
+  while (topMenuSelection?.value !== TopMenuSelection.exit) {
+    topMenuSelection = await displayTopPrompt();
 
-    console.log(levelOneResponse.value);
-  } // while levelOneResponse
+    switch (topMenuSelection.value) {
+      case TopMenuSelection.newGame:
+        console.log('***STARTING NEW GAME***');
+        break;
+
+      case TopMenuSelection.tutorial:
+        console.log('***tutorial goes here***');
+        break;
+
+      case TopMenuSelection.exit:
+        console.log('thanks for playing!');
+        break;
+      default:
+        throw new Error(`invalid selection: ${topMenuSelection.value}`);
+    }
+  } // while not exit
 })();
