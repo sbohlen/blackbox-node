@@ -21,7 +21,7 @@ enum GamePlayMenuSelection {
   abortGamePlay = 'abortGamePlay',
 }
 
-async function topPrompt(): Promise<TopMenuResponse> {
+async function gamePlayPrompt(): Promise<GamePlayMenuResponse> {
   const response: any = await Prompts.prompt({
     type: 'select',
     name: 'value',
@@ -63,7 +63,7 @@ async function topPrompt(): Promise<TopMenuResponse> {
   return response;
 }
 
-async function gamePlayPrompt(): Promise<GamePlayMenuResponse> {
+async function topPrompt(): Promise<TopMenuResponse> {
   const response: any = await Prompts.prompt({
     type: 'select',
     name: 'value',
@@ -127,7 +127,8 @@ type GamePlayMenuResponse = {
 };
 
 async function handleSendRayGamePlayMenuSelection() {
-  throw new Error('Function not implemented.');
+  // throw new Error('Function not implemented.');
+  console.log('sending a ray....!');
 }
 
 async function handleAddGuessGamePlayMenuSelection() {
