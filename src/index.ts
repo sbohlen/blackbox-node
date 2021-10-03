@@ -32,7 +32,7 @@ async function newGamePrompt(): Promise<NewGameResponse> {
     {
       type: 'number',
       name: 'dimensionX',
-      message: 'enter horizontal dimension for the board:',
+      message: 'Enter horizontal dimension for the board (1-20):',
       min: 1,
       max: 20,
       initial: 10,
@@ -40,7 +40,7 @@ async function newGamePrompt(): Promise<NewGameResponse> {
     {
       type: 'number',
       name: 'dimensionY',
-      message: 'enter vertical dimension for the board:',
+      message: 'Enter vertical dimension for the board (1-20):',
       min: 1,
       max: 20,
       initial: 10,
@@ -48,9 +48,9 @@ async function newGamePrompt(): Promise<NewGameResponse> {
     {
       type: 'number',
       name: 'atomCount',
-      message: 'enter number of atoms to hide on the board:',
+      message: 'Enter number of atoms to hide on the board:',
       min: 1,
-      initial: 3,
+      initial: 4,
     },
   ]);
 
