@@ -76,9 +76,21 @@ async function topPrompt(): Promise<TopMenuResponse> {
     name: 'value',
     message: 'select an option',
     choices: [
-      { title: 'Start a new game', value: TopMenuSelection.newGame },
-      { title: 'Tutorial', value: TopMenuSelection.tutorial },
-      { title: 'Exit/Quit', value: TopMenuSelection.exit },
+      {
+        title: 'New Game',
+        description: 'start a new game',
+        value: TopMenuSelection.newGame,
+      },
+      {
+        title: 'Tutorial',
+        description: 'start the tutorial',
+        value: TopMenuSelection.tutorial,
+      },
+      {
+        title: 'Exit/Quit',
+        description: 'end the program',
+        value: TopMenuSelection.exit,
+      },
     ],
   });
 
@@ -137,6 +149,29 @@ function renderGameBoard() {
   console.log(render(gameBoard).toString());
 }
 
+function renderStatistics(isFinal: boolean): void {
+  const stats = gameBoard.getGameStatistics();
+
+  if (isFinal) {
+    console.log('*****************\n** FINAL STATS **\n*****************');
+    console.log(`Rays Fired: ${stats.rayCount}`);
+    console.log(`Atoms Found: ${stats.correctGuessCount}/${stats.atomCount}`);
+    console.log(`Correct Guesses: ${stats.correctGuessCount}`);
+    console.log(`Incorrect Guesses: ${stats.incorrectGuessCount}`);
+    console.log('\n\n');
+  } else {
+    console.log(
+      '*******************\n** CURRENT STATS ** \n*******************',
+    );
+    console.log(`Rays Fired: ${stats.rayCount}`);
+    console.log(`Total Atoms: ${stats.atomCount}`);
+    console.log(
+      `Current Guesses: ${stats.correctGuessCount + stats.incorrectGuessCount}`,
+    );
+    console.log('\n\n');
+  }
+}
+
 async function handleRenderBoardGamePlayMenuSelection() {
   renderGameBoard();
 }
@@ -156,14 +191,13 @@ async function handleRemoveGuessGamePlayMenuSelection() {
 }
 
 async function handleRevealBoardGamePlayMenuSelection() {
-  throw new Error('Function not implemented.');
+  gameBoard.revealAll();
+  renderGameBoard();
+  renderStatistics(true);
 }
 
 async function handleShowStatisticsGamePlayMenuSelection() {
-  const stats = gameBoard.getGameStatistics();
-  // TODO: should NOT display guess data here since game != over)
-  console.log(JSON.stringify(stats));
-  // renderGameBoard();
+  renderStatistics(false);
 }
 
 async function handleAbortGamePlayGamePlayMenuSelection() {
@@ -173,7 +207,10 @@ async function handleAbortGamePlayGamePlayMenuSelection() {
 async function playGame(): Promise<void> {
   let gamePlayMenuSelection: GamePlayMenuResponse;
 
-  while (gamePlayMenuSelection?.value !== GamePlayMenuSelection.abortGamePlay) {
+  while (
+    gamePlayMenuSelection?.value !== GamePlayMenuSelection.abortGamePlay &&
+    gamePlayMenuSelection?.value !== GamePlayMenuSelection.revealBoard
+  ) {
     gamePlayMenuSelection = await gamePlayPrompt();
 
     switch (gamePlayMenuSelection.value) {
