@@ -195,61 +195,68 @@ describe.each`
 );
 
 describe('When firing all rays on an empty game board', () => {
+  const dimensionX = 10;
+  const dimensionY = 10;
+  const atomCount = 1;
+
+  // counter to track the number of rays actually fired
+  let expectedRayCount: number = 0;
+
+  // make board
+  const gameBoard = new GameBoard(dimensionX, dimensionY, atomCount);
+
+  utilityClearAllAtomsFromBoard(gameBoard);
+
+  // iterate each annotation slot (traverse the X axis)
+  for (let x = 1; x <= dimensionX; x += 1) {
+    expectedRayCount += 1;
+    gameBoard.sendRay(BoardEdge.Bottom, x);
+
+    // if the annotation isn't already occupied, run a trace from it
+    if (gameBoard.GridAnnotations.get(`${x},11`).toDisplayString() === '') {
+      expectedRayCount += 1;
+      gameBoard.sendRay(BoardEdge.Top, x);
+    }
+  }
+
+  // iterate each annotation slot (traverse the Y axis)
+  for (let y = 1; y <= dimensionY; y += 1) {
+    expectedRayCount += 1;
+    gameBoard.sendRay(BoardEdge.Left, y);
+    // if the annotation isn't already occupied, run a trace from it
+    if (gameBoard.GridAnnotations.get(`11,${y}`).toDisplayString() === '') {
+      expectedRayCount += 1;
+      gameBoard.sendRay(BoardEdge.Right, y);
+    }
+  }
+
+  const expectedHorizontalAnnotationSequence = [
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+  ];
+
+  const expectedVerticalAnnotationSequence = [
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+  ];
+
   it('should update all expected annotation values', () => {
-    const dimensionX = 10;
-    const dimensionY = 10;
-    const atomCount = 1;
-
-    // make board
-    const gameBoard = new GameBoard(dimensionX, dimensionY, atomCount);
-
-    utilityClearAllAtomsFromBoard(gameBoard);
-
-    // iterate each annotation slot (traverse the X axis)
-    for (let x = 1; x <= dimensionX; x += 1) {
-      gameBoard.sendRay(BoardEdge.Bottom, x);
-
-      // if the annotation isn't already occupied, run a trace from it
-      if (gameBoard.GridAnnotations.get(`${x},11`).toDisplayString() === '') {
-        gameBoard.sendRay(BoardEdge.Top, x);
-      }
-    }
-
-    // iterate each annotation slot (traverse the Y axis)
-    for (let y = 1; y <= dimensionY; y += 1) {
-      gameBoard.sendRay(BoardEdge.Left, y);
-      // if the annotation isn't already occupied, run a trace from it
-      if (gameBoard.GridAnnotations.get(`11,${y}`).toDisplayString() === '') {
-        gameBoard.sendRay(BoardEdge.Right, y);
-      }
-    }
-
-    const expectedHorizontalAnnotationSequence = [
-      'A',
-      'B',
-      'C',
-      'D',
-      'E',
-      'F',
-      'G',
-      'H',
-      'I',
-      'J',
-    ];
-
-    const expectedVerticalAnnotationSequence = [
-      'K',
-      'L',
-      'M',
-      'N',
-      'O',
-      'P',
-      'Q',
-      'R',
-      'S',
-      'T',
-    ];
-
     // validate BOTTOM row of annotations
     for (let i = 1; i <= 10; i += 1) {
       expect(gameBoard.GridAnnotations.get(`${i},0`).toDisplayString()).toEqual(
@@ -285,5 +292,9 @@ describe('When firing all rays on an empty game board', () => {
 
     // eslint-disable-next-line no-console
     console.log(output.toString());
+  });
+
+  it('should track correct count of rays fired', () => {
+    expect(gameBoard.getGameStatistics().rayCount).toEqual(expectedRayCount);
   });
 });
