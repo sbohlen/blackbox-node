@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
 import * as Prompts from 'prompts';
+import { BoardEdge } from './BoardEdge';
 import { GameBoard } from './GameBoard';
 import { render } from './renderGameBoard';
 
@@ -126,9 +127,14 @@ type GamePlayMenuResponse = {
   value: GamePlayMenuSelection;
 };
 
+function renderGameBoard() {
+  console.log(render(gameBoard).toString());
+}
+
 async function handleSendRayGamePlayMenuSelection() {
   // throw new Error('Function not implemented.');
   console.log('sending a ray....!');
+  gameBoard.sendRay(BoardEdge.Bottom, 5);
 }
 
 async function handleAddGuessGamePlayMenuSelection() {
@@ -144,11 +150,14 @@ async function handleRevealBoardGamePlayMenuSelection() {
 }
 
 async function handleShowStatisticsGamePlayMenuSelection() {
-  throw new Error('Function not implemented.');
+  const stats = gameBoard.getGameStatistics();
+  // TODO: should NOT display guess data here since game != over)
+  console.log(JSON.stringify(stats));
+  renderGameBoard();
 }
 
 async function handleAbortGamePlayGamePlayMenuSelection() {
-  throw new Error('Function not implemented.');
+  console.log('Canceling and returning to main menu...');
 }
 
 async function playGame(): Promise<void> {
@@ -181,8 +190,6 @@ async function playGame(): Promise<void> {
           `invalid GamePlayMenuSelection:  ${gamePlayMenuSelection.value}`,
         ); // should never happen
     }
-
-    console.log(render(gameBoard).toString());
   }
 }
 async function handleNewGameTopMenuSelection(
@@ -214,6 +221,8 @@ async function handleTutorialTopMenuSelection(): Promise<void> {
 async function handleExitTopMenuSelection(): Promise<void> {
   console.log('thanks for playing!');
 }
+
+// main entry point async IIFE function
 
 (async () => {
   let topMenuSelection: TopMenuResponse;
