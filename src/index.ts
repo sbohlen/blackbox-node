@@ -12,7 +12,7 @@ enum TopMenuSelection {
   exit = 'exit',
 }
 
-async function topPrompt(): Promise<any> {
+async function topPrompt(): Promise<TopMenuResponse> {
   const response: any = await Prompts.prompt({
     type: 'select',
     name: 'value',
@@ -67,11 +67,17 @@ type NewGameResponse = {
   atomCount: number;
 };
 
-function playGame(): void {
+type TopMenuResponse = {
+  value: TopMenuSelection;
+};
+
+async function playGame(): Promise<void> {
   console.log(render(gameBoard).toString());
 }
 
-function handleNewGameSelection(response: NewGameResponse) {
+async function handleNewGameSelection(
+  response: NewGameResponse,
+): Promise<void> {
   if (validateNewGameResponse(response)) {
     gameBoard = new GameBoard(
       response.dimensionX,
@@ -79,7 +85,7 @@ function handleNewGameSelection(response: NewGameResponse) {
       response.atomCount,
     );
 
-    playGame();
+    await playGame();
   } else {
     console.log(
       `You attempted to place ${
@@ -91,16 +97,16 @@ function handleNewGameSelection(response: NewGameResponse) {
   }
 }
 
-function handleTutorialSelection() {
+async function handleTutorialSelection(): Promise<void> {
   console.log('***TODO: tutorial goes here***');
 }
 
-function handleExitSelection() {
+async function handleExitSelection(): Promise<void> {
   console.log('thanks for playing!');
 }
 
 (async () => {
-  let topMenuSelection: any;
+  let topMenuSelection: TopMenuResponse;
 
   while (topMenuSelection?.value !== TopMenuSelection.exit) {
     topMenuSelection = await topPrompt();
@@ -110,15 +116,15 @@ function handleExitSelection() {
     switch (topMenuSelection.value) {
       case TopMenuSelection.newGame:
         newGameResponse = await newGamePrompt();
-        handleNewGameSelection(newGameResponse);
+        await handleNewGameSelection(newGameResponse);
         break;
 
       case TopMenuSelection.tutorial:
-        handleTutorialSelection();
+        await handleTutorialSelection();
         break;
 
       case TopMenuSelection.exit:
-        handleExitSelection();
+        await handleExitSelection();
         break;
       default:
         throw new Error(`invalid selection: ${topMenuSelection.value}`); // should never happen
