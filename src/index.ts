@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
+import * as Open from 'open';
 import * as Prompts from 'prompts';
 import { BoardEdge } from './BoardEdge';
 import { GameBoard } from './GameBoard';
@@ -83,7 +84,7 @@ async function topPrompt(): Promise<TopMenuResponse> {
       },
       {
         title: 'Tutorial',
-        description: 'start the tutorial',
+        description: 'explore the tutorial',
         value: TopMenuSelection.tutorial,
       },
       {
@@ -265,7 +266,7 @@ async function handleNewGameTopMenuSelection(
 }
 
 async function handleTutorialTopMenuSelection(): Promise<void> {
-  console.log('***TODO: tutorial goes here***');
+  await Open.default('https://en.wikipedia.org/wiki/Black_Box_(game)');
 }
 
 async function handleExitTopMenuSelection(): Promise<void> {
