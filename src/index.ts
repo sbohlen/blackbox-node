@@ -120,6 +120,14 @@ function getSendRayCellIndexMax(previous): number {
   return gameBoard.GameGrid.maxY;
 }
 
+function validateGuessXCoordinate(value: number): boolean {
+  return value >= gameBoard.GameGrid.minX && value <= gameBoard.GameGrid.maxX;
+}
+
+function validateGuessYCoordinate(value: number): boolean {
+  return value >= gameBoard.GameGrid.minY && value <= gameBoard.GameGrid.maxY;
+}
+
 async function sendRayPrompt(): Promise<SendRayResponse> {
   const response: any = await Prompts.prompt([
     {
@@ -163,6 +171,25 @@ async function sendRayPrompt(): Promise<SendRayResponse> {
   return response;
 }
 
+async function addGuessPrompt(): Promise<AddGuessResponse> {
+  const response: any = await Prompts.prompt([
+    {
+      type: 'number',
+      name: 'x',
+      message: 'X coordinate:',
+      validate: validateGuessXCoordinate,
+    },
+    {
+      type: 'number',
+      name: 'y',
+      message: 'Y coordinate:',
+      validate: validateGuessYCoordinate,
+    },
+  ]);
+
+  return response;
+}
+
 async function newGamePrompt(): Promise<NewGameResponse> {
   const response: any = await Prompts.prompt([
     {
@@ -196,6 +223,11 @@ async function newGamePrompt(): Promise<NewGameResponse> {
 function validateNewGameResponse(response: NewGameResponse): boolean {
   return response.atomCount <= response.dimensionX * response.dimensionY;
 }
+
+type AddGuessResponse = {
+  x: number;
+  y: number;
+};
 
 type SendRayResponse = {
   boardEdge: BoardEdge;
@@ -259,7 +291,9 @@ async function handleSendRayGamePlayMenuSelection() {
 }
 
 async function handleAddGuessGamePlayMenuSelection() {
-  throw new Error('Function not implemented.');
+  const response = await addGuessPrompt();
+
+  gameBoard.addGuess(response.x, response.y);
 }
 
 async function handleRemoveGuessGamePlayMenuSelection() {
