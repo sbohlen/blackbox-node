@@ -172,7 +172,7 @@ async function sendRayPrompt(): Promise<SendRayResponse> {
   return response;
 }
 
-async function addGuessPrompt(): Promise<AddRemoveGuessResponse> {
+async function addGuessPrompt(): Promise<AddGuessResponse> {
   const response: any = await Prompts.prompt([
     {
       type: 'number',
@@ -191,39 +191,20 @@ async function addGuessPrompt(): Promise<AddRemoveGuessResponse> {
   return response;
 }
 
-async function removeGuessPrompt(): Promise<any> {
+async function removeGuessPrompt(): Promise<RemoveGuessResponse> {
   const choices: Array<{ title: string; value: Point }> = gameBoard
     .getGuesses()
     .map((guess) => ({ title: guess.point.toIdString(), value: guess.point }));
 
   const response: any = await Prompts.prompt({
     type: 'select',
-    name: 'guessPoint',
+    name: 'point',
     message: 'Select the guess to remove',
     choices,
   });
 
   return response;
 }
-
-// async function removeGuessPrompt(): Promise<AddRemoveGuessResponse> {
-//   const response: any = await Prompts.prompt([
-//     {
-//       type: 'number',
-//       name: 'x',
-//       message: 'X coordinate:',
-//       validate: validateGuessXCoordinate,
-//     },
-//     {
-//       type: 'number',
-//       name: 'y',
-//       message: 'Y coordinate:',
-//       validate: validateGuessYCoordinate,
-//     },
-//   ]);
-
-//   return response;
-// }
 
 async function newGamePrompt(): Promise<NewGameResponse> {
   const response: any = await Prompts.prompt([
@@ -259,9 +240,13 @@ function validateNewGameResponse(response: NewGameResponse): boolean {
   return response.atomCount <= response.dimensionX * response.dimensionY;
 }
 
-type AddRemoveGuessResponse = {
+type AddGuessResponse = {
   x: number;
   y: number;
+};
+
+type RemoveGuessResponse = {
+  point: Point;
 };
 
 type SendRayResponse = {
@@ -337,10 +322,13 @@ async function handleAddGuessGamePlayMenuSelection() {
 }
 
 async function handleRemoveGuessGamePlayMenuSelection() {
-  const response = await removeGuessPrompt();
+  if (gameBoard.getGuesses().length > 0) {
+    const response = await removeGuessPrompt();
+    gameBoard.removeGuess(response.point.X, response.point.Y);
+  } else {
+    console.log('You have no guesses to remove!');
+  }
 
-  gameBoard.removeGuess(response.guessPoint.X, response.guessPoint.Y);
-  // gameBoard.removeGuess(response.x, response.y);
   renderGameBoard();
 }
 
