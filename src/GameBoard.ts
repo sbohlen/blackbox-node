@@ -1,6 +1,7 @@
 import { BoardEdge } from './BoardEdge';
 import { buildGameGrid } from './buildGameGrid';
 import { buildGridAnnotations } from './buildGridAnnotations';
+import { Cell } from './Cell';
 import { Direction } from './Direction';
 import { GameGrid } from './GameGrid';
 import { GameStatistics } from './GameStatistics';
@@ -70,6 +71,12 @@ export class GameBoard {
 
     // ... as a last step, return the actual value
     return this.lastUsedAnnotationValue;
+  }
+
+  getGuesses(): Array<Cell> {
+    return Array.from(this.gameGrid.values()).filter(
+      (cell) => cell.isGuess === true,
+    );
   }
 
   private determineEntryPointAndDirection(

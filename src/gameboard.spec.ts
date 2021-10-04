@@ -63,3 +63,15 @@ describe('When creating GameBoard', () => {
     }).toThrow();
   });
 });
+
+describe('When retrieving Guesses', () => {
+  const gameBoard = new GameBoard(10, 10, 1);
+
+  for (let i = 1; i <= 5; i += 1) {
+    gameBoard.addGuess(i, i);
+  }
+
+  it('should retrieve expected guesses', () => {
+    expect(gameBoard.getGuesses().length).toEqual(5);
+  });
+});
