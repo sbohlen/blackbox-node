@@ -335,11 +335,13 @@ export function traceRay(
 
   // if we have a hit, return that with entry point as final point
   if (traceResult.isHit) {
+    gameGrid.resetRotation();
     return { isHit: traceResult.isHit, finalPoint: entryPoint };
   }
 
   // if we have a reflect, return that with entry point as final point
   if (traceResult.isReflect) {
+    gameGrid.resetRotation();
     return { isReflect: traceResult.isReflect, finalPoint: entryPoint };
   }
 
