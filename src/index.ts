@@ -4,6 +4,7 @@ import * as Open from 'open';
 import * as Prompts from 'prompts';
 import { BoardEdge } from './BoardEdge';
 import { GameBoard } from './GameBoard';
+import { Point } from './point';
 import { render } from './renderGameBoard';
 
 let gameBoard: GameBoard;
@@ -190,24 +191,39 @@ async function addGuessPrompt(): Promise<AddRemoveGuessResponse> {
   return response;
 }
 
-async function removeGuessPrompt(): Promise<AddRemoveGuessResponse> {
-  const response: any = await Prompts.prompt([
-    {
-      type: 'number',
-      name: 'x',
-      message: 'X coordinate:',
-      validate: validateGuessXCoordinate,
-    },
-    {
-      type: 'number',
-      name: 'y',
-      message: 'Y coordinate:',
-      validate: validateGuessYCoordinate,
-    },
-  ]);
+async function removeGuessPrompt(): Promise<any> {
+  const choices: Array<{ title: string; value: Point }> = gameBoard
+    .getGuesses()
+    .map((guess) => ({ title: guess.point.toIdString(), value: guess.point }));
+
+  const response: any = await Prompts.prompt({
+    type: 'select',
+    name: 'guessPoint',
+    message: 'Select the guess to remove',
+    choices,
+  });
 
   return response;
 }
+
+// async function removeGuessPrompt(): Promise<AddRemoveGuessResponse> {
+//   const response: any = await Prompts.prompt([
+//     {
+//       type: 'number',
+//       name: 'x',
+//       message: 'X coordinate:',
+//       validate: validateGuessXCoordinate,
+//     },
+//     {
+//       type: 'number',
+//       name: 'y',
+//       message: 'Y coordinate:',
+//       validate: validateGuessYCoordinate,
+//     },
+//   ]);
+
+//   return response;
+// }
 
 async function newGamePrompt(): Promise<NewGameResponse> {
   const response: any = await Prompts.prompt([
@@ -323,7 +339,8 @@ async function handleAddGuessGamePlayMenuSelection() {
 async function handleRemoveGuessGamePlayMenuSelection() {
   const response = await removeGuessPrompt();
 
-  gameBoard.removeGuess(response.x, response.y);
+  gameBoard.removeGuess(response.guessPoint.X, response.guessPoint.Y);
+  // gameBoard.removeGuess(response.x, response.y);
   renderGameBoard();
 }
 
