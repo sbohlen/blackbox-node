@@ -268,11 +268,17 @@ type GamePlayMenuResponse = {
 };
 
 function renderGameBoard() {
-  console.log(render(gameBoard).toString());
+  console.log(`${render(gameBoard).toString()}\n`);
 }
 
 function renderGameBoardSymbolsKey() {
-  console.log('****SYMBOLS KEY HERE****');
+  console.log(`
+    Symbol Key
+  ----------------|------
+  Correct Guess   | X
+  Incorrect Guess | O
+  Missed Target   | T
+  `);
 }
 
 function renderStatistics(isFinal: boolean): void {
@@ -284,7 +290,6 @@ function renderStatistics(isFinal: boolean): void {
     console.log(`Atoms Found: ${stats.correctGuessCount}/${stats.atomCount}`);
     console.log(`Correct Guesses: ${stats.correctGuessCount}`);
     console.log(`Incorrect Guesses: ${stats.incorrectGuessCount}`);
-    console.log('\n\n');
   } else {
     console.log(
       '*******************\n** CURRENT STATS ** \n*******************',
@@ -294,7 +299,6 @@ function renderStatistics(isFinal: boolean): void {
     console.log(
       `Current Guesses: ${stats.correctGuessCount + stats.incorrectGuessCount}`,
     );
-    console.log('\n\n');
   }
 }
 
