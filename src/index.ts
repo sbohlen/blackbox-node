@@ -171,7 +171,26 @@ async function sendRayPrompt(): Promise<SendRayResponse> {
   return response;
 }
 
-async function addGuessPrompt(): Promise<AddGuessResponse> {
+async function addGuessPrompt(): Promise<AddRemoveGuessResponse> {
+  const response: any = await Prompts.prompt([
+    {
+      type: 'number',
+      name: 'x',
+      message: 'X coordinate:',
+      validate: validateGuessXCoordinate,
+    },
+    {
+      type: 'number',
+      name: 'y',
+      message: 'Y coordinate:',
+      validate: validateGuessYCoordinate,
+    },
+  ]);
+
+  return response;
+}
+
+async function removeGuessPrompt(): Promise<AddRemoveGuessResponse> {
   const response: any = await Prompts.prompt([
     {
       type: 'number',
@@ -224,7 +243,7 @@ function validateNewGameResponse(response: NewGameResponse): boolean {
   return response.atomCount <= response.dimensionX * response.dimensionY;
 }
 
-type AddGuessResponse = {
+type AddRemoveGuessResponse = {
   x: number;
   y: number;
 };
@@ -294,10 +313,14 @@ async function handleAddGuessGamePlayMenuSelection() {
   const response = await addGuessPrompt();
 
   gameBoard.addGuess(response.x, response.y);
+  renderGameBoard();
 }
 
 async function handleRemoveGuessGamePlayMenuSelection() {
-  throw new Error('Function not implemented.');
+  const response = await removeGuessPrompt();
+
+  gameBoard.removeGuess(response.x, response.y);
+  renderGameBoard();
 }
 
 async function handleRevealBoardGamePlayMenuSelection() {
