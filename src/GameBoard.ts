@@ -7,6 +7,7 @@ import { GameGrid } from './GameGrid';
 import { GameStatistics } from './GameStatistics';
 import { getNextLetter } from './getNextCharacter';
 import { GridAnnotations } from './GridAnnotations';
+import { logger } from './logger';
 import { notNullOrUndefined } from './notNullOrUndefined';
 import { Point } from './point';
 import { traceRay } from './rayTracer';
@@ -112,6 +113,8 @@ export class GameBoard {
   }
 
   sendRay(entryEdge: BoardEdge, cellIndex: number) {
+    logger.debug(`Sending Ray from edge: ${entryEdge}, index: ${cellIndex}`);
+
     const [entryPoint, entryDirection] = this.determineEntryPointAndDirection(
       entryEdge,
       cellIndex,
