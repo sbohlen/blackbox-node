@@ -3,6 +3,7 @@
 import * as Open from 'open';
 import * as Prompts from 'prompts';
 import { BoardEdge } from './BoardEdge';
+import { CellDisplayString } from './CellDisplayString';
 import { GameBoard } from './GameBoard';
 import { Point } from './point';
 import { render } from './renderGameBoard';
@@ -273,13 +274,11 @@ function renderGameBoard() {
 }
 
 function renderGameBoardSymbolsKey() {
-  console.log(`
-    Symbol Key
-  ----------------|------
-  Correct Guess   | X
-  Incorrect Guess | O
-  Missed Target   | T
-  `);
+  console.log('\nSymbol Key');
+  console.log('----------------|------');
+  console.log(`Correct Guess   | ${CellDisplayString.correctGuess}`);
+  console.log(`Incorrect Guess | ${CellDisplayString.incorrectGuess}`);
+  console.log(`Missed Target   | ${CellDisplayString.missedTarget}`);
 }
 
 function renderStatistics(isFinal: boolean): void {
