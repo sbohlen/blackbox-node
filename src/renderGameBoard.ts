@@ -1,3 +1,4 @@
+import { gray } from 'kleur';
 import { GameBoard } from './GameBoard';
 import { GridElement } from './GridElement';
 import { Point } from './point';
@@ -26,6 +27,10 @@ function getBoardElement(
     return gameBoard.GameGrid.get(new Point(x, y).toIdString());
   }
   return gameBoard.GridAnnotations.get(new Point(x, y).toIdString());
+}
+
+function formatDisplayString(input: string): string {
+  return gray(input);
 }
 
 export function render(gameBoard: GameBoard): any {
@@ -75,7 +80,7 @@ export function render(gameBoard: GameBoard): any {
           currentColumnIndex <= gameBoard.GameGrid.maxX
         ) {
           // ...display the index
-          row.push(currentColumnIndex.toString());
+          row.push(formatDisplayString(currentColumnIndex.toString()));
         } else {
           // ...otherwise display empty string
           row.push('');
@@ -148,7 +153,7 @@ export function render(gameBoard: GameBoard): any {
           currentColumnIndex === gameBoard.GameGrid.maxX + 2
         ) {
           // ...display the index
-          row.push(currentRowIndex.toString());
+          row.push(formatDisplayString(currentRowIndex.toString()));
         }
 
         // if we're in the LEFT or RIGHT annotation column...
