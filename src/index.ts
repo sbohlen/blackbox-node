@@ -215,7 +215,7 @@ async function newGamePrompt(): Promise<NewGameResponse> {
       message: 'Enter horizontal dimension for the board (1-20):',
       min: 1,
       max: 20,
-      initial: 10,
+      initial: 8,
     },
     {
       type: 'number',
@@ -223,7 +223,7 @@ async function newGamePrompt(): Promise<NewGameResponse> {
       message: 'Enter vertical dimension for the board (1-20):',
       min: 1,
       max: 20,
-      initial: 10,
+      initial: 8,
     },
     {
       type: 'number',
