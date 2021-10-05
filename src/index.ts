@@ -2,6 +2,7 @@
 /* eslint-disable no-await-in-loop */
 import * as Open from 'open';
 import * as Prompts from 'prompts';
+import { AnnotationDisplayString } from './AnnotationDisplayString';
 import { BoardEdge } from './BoardEdge';
 import { CellDisplayString } from './CellDisplayString';
 import { GameBoard } from './GameBoard';
@@ -269,12 +270,25 @@ type GamePlayMenuResponse = {
   value: GamePlayMenuSelection;
 };
 
-function renderGameBoard() {
-  console.log(`${render(gameBoard).toString()}\n`);
+function renderGameBoardActiveGameSymbolsKey() {
+  console.log('\n');
+  console.log(`Ray entry/exit pair | A-Z`);
+  console.log(`Entry = HIT         | ${AnnotationDisplayString.hit}`);
+  console.log(
+    // eslint-disable-next-line max-len
+    `Entry = REFLECT     | ${AnnotationDisplayString.reflectTop}, ${AnnotationDisplayString.reflectBottom}, ${AnnotationDisplayString.reflectLeft}, ${AnnotationDisplayString.reflectRight}`,
+  );
+  console.log(`Current Guesses     | ${CellDisplayString.guess}`);
+  console.log('\n');
 }
 
-function renderGameBoardSymbolsKey() {
-  console.log('\nSymbol Key');
+function renderGameBoard() {
+  console.log(`${render(gameBoard).toString()}\n`);
+  renderGameBoardActiveGameSymbolsKey();
+}
+
+function renderGameBoardRevealSymbolsKey() {
+  console.log('\nRevealed Board Symbols');
   console.log('----------------|------');
   console.log(`Correct Guess   | ${CellDisplayString.correctGuess}`);
   console.log(`Incorrect Guess | ${CellDisplayString.incorrectGuess}`);
@@ -285,14 +299,14 @@ function renderStatistics(isFinal: boolean): void {
   const stats = gameBoard.getGameStatistics();
 
   if (isFinal) {
-    console.log('*****************\n** FINAL STATS **\n*****************');
+    console.log('\n*****************\n** FINAL STATS **\n*****************');
     console.log(`Rays Fired: ${stats.rayCount}`);
     console.log(`Atoms Found: ${stats.correctGuessCount}/${stats.atomCount}`);
     console.log(`Correct Guesses: ${stats.correctGuessCount}`);
     console.log(`Incorrect Guesses: ${stats.incorrectGuessCount}`);
   } else {
     console.log(
-      '*******************\n** CURRENT STATS ** \n*******************',
+      '\n*******************\n** CURRENT STATS ** \n*******************',
     );
     console.log(`Rays Fired: ${stats.rayCount}`);
     console.log(`Total Atoms: ${stats.atomCount}`);
@@ -334,8 +348,8 @@ async function handleRemoveGuessGamePlayMenuSelection() {
 async function handleRevealBoardGamePlayMenuSelection() {
   gameBoard.revealAll();
   renderGameBoard();
+  renderGameBoardRevealSymbolsKey();
   renderStatistics(true);
-  renderGameBoardSymbolsKey();
 }
 
 async function handleShowStatisticsGamePlayMenuSelection() {
