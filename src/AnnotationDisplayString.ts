@@ -1,11 +1,15 @@
+import { bgRed, bgYellow, black, white } from 'kleur/colors';
+
 export class AnnotationDisplayString {
-  static readonly hit = '!';
+  static readonly hit = bgRed(white(' ! '));
 
-  static readonly reflectBottom = '^';
+  static readonly reflectBottom = bgYellow(black(' ^ '));
 
-  static readonly reflectTop = 'v';
+  static readonly reflectTop = bgYellow(black(' v '));
 
-  static readonly reflectLeft = '>';
+  static readonly reflectLeft = bgYellow(black(' > '));
 
-  static readonly reflectRight = '<';
+  static readonly reflectRight = bgYellow(black(' < '));
+
+  static readonly empty = '   ';
 }
