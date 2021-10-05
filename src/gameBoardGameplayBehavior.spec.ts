@@ -194,7 +194,7 @@ describe.each`
   },
 );
 
-describe('When firing all rays on an empty game board', () => {
+describe('When firing all possible rays on an empty game board', () => {
   const dimensionX = 10;
   const dimensionY = 10;
   const atomCount = 1;
@@ -292,6 +292,175 @@ describe('When firing all rays on an empty game board', () => {
 
     // eslint-disable-next-line no-console
     console.log(output.toString());
+  });
+
+  it('should track correct count of rays fired', () => {
+    expect(gameBoard.getGameStatistics().rayCount).toEqual(expectedRayCount);
+  });
+});
+
+function buildExpectedAnnotationValuesMap(): Map<string, string> {
+  const values = new Map<string, string>();
+  // set bottom row annotation values
+  values.set('1,0', 'A');
+  values.set('2,0', 'B');
+  values.set('3,0', 'C');
+  values.set('4,0', '!');
+  values.set('5,0', '^');
+  values.set('6,0', '!');
+  values.set('7,0', 'D');
+  values.set('8,0', 'E');
+  values.set('9,0', '!');
+  values.set('10,0', 'F');
+
+  // set left column annotation values
+  values.set('0,1', 'E');
+  values.set('0,2', '!');
+  values.set('0,3', 'C');
+  values.set('0,4', '!');
+  values.set('0,5', 'G');
+  values.set('0,6', 'J');
+  values.set('0,7', 'K');
+  values.set('0,8', 'L');
+  values.set('0,9', '!');
+  values.set('0,10', '!');
+
+  // set top row annotation values
+  values.set('1,11', 'A');
+  values.set('2,11', 'B');
+  values.set('3,11', 'G');
+  values.set('4,11', 'v');
+  values.set('5,11', '!');
+  values.set('6,11', 'v');
+  values.set('7,11', 'H');
+  values.set('8,11', 'D');
+  values.set('9,11', '!');
+  values.set('10,11', 'I');
+
+  // set right column annotation values
+  values.set('11,1', 'F');
+  values.set('11,2', '!');
+  values.set('11,3', 'I');
+  values.set('11,4', '!');
+  values.set('11,5', 'H');
+  values.set('11,6', 'J');
+  values.set('11,7', 'K');
+  values.set('11,8', 'L');
+  values.set('11,9', '!');
+  values.set('11,10', '!');
+
+  return values;
+}
+
+describe('When firing all possible rays on a non-empty game board', () => {
+  /**
+   *
+   *            A    B   G     v    !    v    H    D    !     I
+   *            1    2   3     4    5    6    7    8    9    10
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *    ! 10 |    |    |    |    | X  |    |    |    |    |    | 10 !
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *    !  9 |    |    |    |    |    |    |    |    |    |    | 9  !
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *    L  8 |    |    |    |    |    |    |    |    |    |    | 8  L
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *    K  7 |    |    |    |    |    |    |    |    |    |    | 7  K
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *    J  6 |    |    |    |    |    |    |    |    |    |    | 6  J
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *    G  5 |    |    |    |    |    |    |    |    |    |    | 5  H
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *    !  4 |    |    |    | X  |    |  X |    |    |    |    | 4  !
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *    C  3 |    |    |    |    |    |    |    |    |    |    | 3  I
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *    !  2 |    |    |    |    |    |    |    |    | X  |    | 2  !
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *    E  1 |    |    |    |    |    |    |    |    |    |    | 1  F
+   *         +----+----+----+----+----+----+----+----+----+----+
+   *            1    2    3    4   5    6     7    8    9   10
+   *            A    B    C    !   ^    !     D    E    !    F
+   *
+   *      Key
+   *      ----------------------------------------
+   *         X --> cell containing an atom
+   *   ^,<,>,v --> reflected ray annotation
+   *         ! --> ray that hits an atom
+   *       A-Z --> entry/exit path pair
+   *
+   */
+
+  const expectedAnnotationValues: Map<string, string> =
+    buildExpectedAnnotationValuesMap();
+
+  const dimensionX = 10;
+  const dimensionY = 10;
+  const atomCount = 1;
+
+  // counter to track the number of rays actually fired
+  let expectedRayCount: number = 0;
+
+  // make board
+  const gameBoard = new GameBoard(dimensionX, dimensionY, atomCount);
+
+  // remove the randomly-generated atom(s) from the board
+  utilityClearAllAtomsFromBoard(gameBoard);
+
+  // set atoms in a predictable/known cell
+  gameBoard.GameGrid.get('9,2').hasAtom = true;
+  gameBoard.GameGrid.get('4,4').hasAtom = true;
+  gameBoard.GameGrid.get('6,4').hasAtom = true;
+  gameBoard.GameGrid.get('5,10').hasAtom = true;
+
+  // send a ray from each annotation along the bottom edge of the board
+  for (let x = 1; x <= dimensionX; x += 1) {
+    // if the annotation isn't already occupied, send a ray from it
+    if (gameBoard.GridAnnotations.get(`${x},0`).toDisplayString() === '') {
+      expectedRayCount += 1;
+      gameBoard.sendRay(BoardEdge.Bottom, x);
+    }
+  }
+
+  // send a ray from each annotation along the top edge of the board
+  for (let x = 1; x <= dimensionX; x += 1) {
+    // if the annotation isn't already occupied, send a ray from it
+    if (gameBoard.GridAnnotations.get(`${x},11`).toDisplayString() === '') {
+      expectedRayCount += 1;
+      gameBoard.sendRay(BoardEdge.Top, x);
+    }
+  }
+
+  // send a ray from each annotation along the left edge of the board
+  for (let y = 1; y <= dimensionY; y += 1) {
+    // if the annotation isn't already occupied, send a ray from it
+    if (gameBoard.GridAnnotations.get(`0,${y}`).toDisplayString() === '') {
+      expectedRayCount += 1;
+      gameBoard.sendRay(BoardEdge.Left, y);
+    }
+  }
+
+  // send a ray from each annotation along the right edge of the board
+  for (let y = 1; y <= dimensionY; y += 1) {
+    // if the annotation isn't already occupied, send a ray from it
+    if (gameBoard.GridAnnotations.get(`11,${y}`).toDisplayString() === '') {
+      expectedRayCount += 1;
+      gameBoard.sendRay(BoardEdge.Right, y);
+    }
+  }
+
+  it('should update all annotations with non-empty value', () => {
+    Array.from(gameBoard.GridAnnotations.values()).forEach((anno) =>
+      expect(anno.toDisplayString()).not.toEqual(''),
+    );
+  });
+
+  // for each annotation, lookup its expected value and compare
+  it('should update all annotations with expected values', () => {
+    Array.from(gameBoard.GridAnnotations.values()).forEach((anno) =>
+      expect(anno.toDisplayString()).toEqual(
+        expectedAnnotationValues.get(anno.point.toIdString()),
+      ),
+    );
   });
 
   it('should track correct count of rays fired', () => {
