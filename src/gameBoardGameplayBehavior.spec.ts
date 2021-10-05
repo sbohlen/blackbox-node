@@ -213,7 +213,10 @@ describe('When firing all possible rays on an empty game board', () => {
     gameBoard.sendRay(BoardEdge.Bottom, x);
 
     // if the annotation isn't already occupied, run a trace from it
-    if (gameBoard.GridAnnotations.get(`${x},11`).toDisplayString() === '') {
+    if (
+      gameBoard.GridAnnotations.get(`${x},11`).toDisplayString() ===
+      AnnotationDisplayString.empty
+    ) {
       expectedRayCount += 1;
       gameBoard.sendRay(BoardEdge.Top, x);
     }
@@ -224,7 +227,10 @@ describe('When firing all possible rays on an empty game board', () => {
     expectedRayCount += 1;
     gameBoard.sendRay(BoardEdge.Left, y);
     // if the annotation isn't already occupied, run a trace from it
-    if (gameBoard.GridAnnotations.get(`11,${y}`).toDisplayString() === '') {
+    if (
+      gameBoard.GridAnnotations.get(`11,${y}`).toDisplayString() ===
+      AnnotationDisplayString.empty
+    ) {
       expectedRayCount += 1;
       gameBoard.sendRay(BoardEdge.Right, y);
     }
@@ -305,49 +311,49 @@ function buildExpectedAnnotationValuesMap(): Map<string, string> {
   values.set('1,0', 'A');
   values.set('2,0', 'B');
   values.set('3,0', 'C');
-  values.set('4,0', '!');
-  values.set('5,0', '^');
-  values.set('6,0', '!');
+  values.set('4,0', AnnotationDisplayString.hit);
+  values.set('5,0', AnnotationDisplayString.reflectBottom);
+  values.set('6,0', AnnotationDisplayString.hit);
   values.set('7,0', 'D');
   values.set('8,0', 'E');
-  values.set('9,0', '!');
+  values.set('9,0', AnnotationDisplayString.hit);
   values.set('10,0', 'F');
 
   // set left column annotation values
   values.set('0,1', 'E');
-  values.set('0,2', '!');
+  values.set('0,2', AnnotationDisplayString.hit);
   values.set('0,3', 'C');
-  values.set('0,4', '!');
+  values.set('0,4', AnnotationDisplayString.hit);
   values.set('0,5', 'G');
   values.set('0,6', 'J');
   values.set('0,7', 'K');
   values.set('0,8', 'L');
-  values.set('0,9', '!');
-  values.set('0,10', '!');
+  values.set('0,9', AnnotationDisplayString.hit);
+  values.set('0,10', AnnotationDisplayString.hit);
 
   // set top row annotation values
   values.set('1,11', 'A');
   values.set('2,11', 'B');
   values.set('3,11', 'G');
-  values.set('4,11', 'v');
-  values.set('5,11', '!');
-  values.set('6,11', 'v');
+  values.set('4,11', AnnotationDisplayString.reflectTop);
+  values.set('5,11', AnnotationDisplayString.hit);
+  values.set('6,11', AnnotationDisplayString.reflectTop);
   values.set('7,11', 'H');
   values.set('8,11', 'D');
-  values.set('9,11', '!');
+  values.set('9,11', AnnotationDisplayString.hit);
   values.set('10,11', 'I');
 
   // set right column annotation values
   values.set('11,1', 'F');
-  values.set('11,2', '!');
+  values.set('11,2', AnnotationDisplayString.hit);
   values.set('11,3', 'I');
-  values.set('11,4', '!');
+  values.set('11,4', AnnotationDisplayString.hit);
   values.set('11,5', 'H');
   values.set('11,6', 'J');
   values.set('11,7', 'K');
   values.set('11,8', 'L');
-  values.set('11,9', '!');
-  values.set('11,10', '!');
+  values.set('11,9', AnnotationDisplayString.hit);
+  values.set('11,10', AnnotationDisplayString.hit);
 
   return values;
 }
@@ -415,7 +421,10 @@ describe('When firing all possible rays on a non-empty game board', () => {
   // send a ray from each annotation along the bottom edge of the board
   for (let x = 1; x <= dimensionX; x += 1) {
     // if the annotation isn't already occupied, send a ray from it
-    if (gameBoard.GridAnnotations.get(`${x},0`).toDisplayString() === '') {
+    if (
+      gameBoard.GridAnnotations.get(`${x},0`).toDisplayString() ===
+      AnnotationDisplayString.empty
+    ) {
       expectedRayCount += 1;
       gameBoard.sendRay(BoardEdge.Bottom, x);
     }
@@ -424,7 +433,10 @@ describe('When firing all possible rays on a non-empty game board', () => {
   // send a ray from each annotation along the top edge of the board
   for (let x = 1; x <= dimensionX; x += 1) {
     // if the annotation isn't already occupied, send a ray from it
-    if (gameBoard.GridAnnotations.get(`${x},11`).toDisplayString() === '') {
+    if (
+      gameBoard.GridAnnotations.get(`${x},11`).toDisplayString() ===
+      AnnotationDisplayString.empty
+    ) {
       expectedRayCount += 1;
       gameBoard.sendRay(BoardEdge.Top, x);
     }
@@ -433,7 +445,10 @@ describe('When firing all possible rays on a non-empty game board', () => {
   // send a ray from each annotation along the left edge of the board
   for (let y = 1; y <= dimensionY; y += 1) {
     // if the annotation isn't already occupied, send a ray from it
-    if (gameBoard.GridAnnotations.get(`0,${y}`).toDisplayString() === '') {
+    if (
+      gameBoard.GridAnnotations.get(`0,${y}`).toDisplayString() ===
+      AnnotationDisplayString.empty
+    ) {
       expectedRayCount += 1;
       gameBoard.sendRay(BoardEdge.Left, y);
     }
@@ -442,7 +457,10 @@ describe('When firing all possible rays on a non-empty game board', () => {
   // send a ray from each annotation along the right edge of the board
   for (let y = 1; y <= dimensionY; y += 1) {
     // if the annotation isn't already occupied, send a ray from it
-    if (gameBoard.GridAnnotations.get(`11,${y}`).toDisplayString() === '') {
+    if (
+      gameBoard.GridAnnotations.get(`11,${y}`).toDisplayString() ===
+      AnnotationDisplayString.empty
+    ) {
       expectedRayCount += 1;
       gameBoard.sendRay(BoardEdge.Right, y);
     }
@@ -450,7 +468,7 @@ describe('When firing all possible rays on a non-empty game board', () => {
 
   it('should update all annotations with non-empty value', () => {
     Array.from(gameBoard.GridAnnotations.values()).forEach((anno) =>
-      expect(anno.toDisplayString()).not.toEqual(''),
+      expect(anno.toDisplayString()).not.toEqual(AnnotationDisplayString.empty),
     );
   });
 
