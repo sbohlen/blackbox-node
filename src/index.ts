@@ -54,8 +54,8 @@ async function gamePlayPrompt(): Promise<GamePlayMenuResponse> {
         value: GamePlayMenuSelection.removeGuess,
       },
       {
-        title: 'Show Score',
-        description: 'Display current game statistics/score',
+        title: 'Show Statistics',
+        description: 'Display current game statistics',
         value: GamePlayMenuSelection.showStatistics,
       },
       {
@@ -310,8 +310,6 @@ function renderStatistics(isFinal: boolean): void {
     console.log(
       '\n*******************\n** CURRENT STATS ** \n*******************',
     );
-    console.log(`LATEST SCORE: ${stats.score}`);
-    console.log('-------------------');
     console.log(`Rays Fired: ${stats.rayCount}`);
     console.log(`Total Atoms: ${stats.atomCount}`);
     console.log(
