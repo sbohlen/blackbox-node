@@ -300,6 +300,8 @@ function renderStatistics(isFinal: boolean): void {
 
   if (isFinal) {
     console.log('\n*****************\n** FINAL STATS **\n*****************');
+    console.log(`TOTAL SCORE: ${stats.score}`);
+    console.log('-------------------');
     console.log(`Rays Fired: ${stats.rayCount}`);
     console.log(`Atoms Found: ${stats.correctGuessCount}/${stats.atomCount}`);
     console.log(`Correct Guesses: ${stats.correctGuessCount}`);
@@ -308,6 +310,8 @@ function renderStatistics(isFinal: boolean): void {
     console.log(
       '\n*******************\n** CURRENT STATS ** \n*******************',
     );
+    console.log(`LATEST SCORE: ${stats.score}`);
+    console.log('-------------------');
     console.log(`Rays Fired: ${stats.rayCount}`);
     console.log(`Total Atoms: ${stats.atomCount}`);
     console.log(
