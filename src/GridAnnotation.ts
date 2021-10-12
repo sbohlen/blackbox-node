@@ -1,9 +1,9 @@
-import { CellDisplayString } from './CellDisplayString';
+import { AnnotationDisplayString } from './AnnotationDisplayString';
 import { GridElement } from './GridElement';
 import { Point } from './point';
 
 export class GridAnnotation extends GridElement {
-  annotation: string = CellDisplayString.empty;
+  annotation: string = AnnotationDisplayString.empty;
 
   constructor(readonly point: Point) {
     super(point);
