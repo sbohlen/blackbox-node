@@ -1,6 +1,7 @@
 import { BoardEdge } from './BoardEdge';
 import { buildGameGrid } from './buildGameGrid';
 import { buildGridAnnotations } from './buildGridAnnotations';
+import { calculateScore } from './calculateScore';
 import { Cell } from './Cell';
 import { Direction } from './Direction';
 import { GameGrid } from './GameGrid';
@@ -165,6 +166,10 @@ export class GameBoard {
     stats.rayCount = this.rayCounter;
     stats.correctGuessCount = correctGuessCount(this.GameGrid);
     stats.incorrectGuessCount = incorrectGuessCount(this.GameGrid);
+    stats.score = calculateScore(
+      this.GridAnnotations,
+      stats.incorrectGuessCount,
+    );
 
     return stats;
   }

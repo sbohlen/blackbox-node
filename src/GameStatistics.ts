@@ -6,4 +6,6 @@ export class GameStatistics {
   incorrectGuessCount: number;
 
   atomCount: number;
+
+  score: number;
 }
