@@ -1,4 +1,4 @@
-import { bgCyan, bgGreen, bgRed, black, white } from 'kleur/colors';
+import { bgCyan, bgGreen, bgRed, black, inverse, white } from 'kleur/colors';
 
 export class CellDisplayString {
   static readonly guess = bgCyan(black(' ? '));
@@ -9,5 +9,5 @@ export class CellDisplayString {
 
   static readonly missedTarget = bgCyan(black(' T '));
 
-  static readonly empty = '   ';
+  static readonly empty = inverse(white('   '));
 }
