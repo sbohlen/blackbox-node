@@ -38,6 +38,8 @@ function getMissedRayCount(
 
 export function calculateScore(
   annotations: GridAnnotations,
+  totalAtomCount: number,
+  correctGuessCount: number,
   incorrectGuessCount: number,
 ): number {
   const hitRayCount = getHitRayCount(annotations);
@@ -52,7 +54,8 @@ export function calculateScore(
     missedRayCount +
     hitRayCount +
     reflectRayCount +
-    incorrectGuessCount * missedGuessPenalty;
+    incorrectGuessCount * missedGuessPenalty +
+    (totalAtomCount - correctGuessCount) * missedGuessPenalty;
 
   return score;
 }

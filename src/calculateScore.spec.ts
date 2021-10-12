@@ -21,7 +21,7 @@ function buildAnnotations(
 describe('When all empty annotations', () => {
   const annotations = buildAnnotations(10, 10);
   it('should return expected score', () => {
-    expect(calculateScore(annotations, 0)).toEqual(0);
+    expect(calculateScore(annotations, 0, 0, 0)).toEqual(0);
   });
 });
 
@@ -40,7 +40,7 @@ describe.each`
   annotations.get('1,3').annotation = annotationValue;
 
   it(`should return expected score for ${testCaseName}`, () => {
-    expect(calculateScore(annotations, 0)).toEqual(3);
+    expect(calculateScore(annotations, 0, 0, 0)).toEqual(3);
   });
 });
 
@@ -52,7 +52,7 @@ describe('When all annotations are misses', () => {
   annotations.get('1,3').annotation = 'C';
 
   it('should return expected score', () => {
-    expect(calculateScore(annotations, 0)).toEqual(3);
+    expect(calculateScore(annotations, 0, 0, 0)).toEqual(3);
   });
 });
 
@@ -60,11 +60,11 @@ describe('When all empty annotations and incorrect guesses are present', () => {
   const annotations = buildAnnotations(10, 10);
 
   it('should return expected score', () => {
-    expect(calculateScore(annotations, 2)).toEqual(10);
+    expect(calculateScore(annotations, 0, 0, 2)).toEqual(10);
   });
 });
 
-describe('When a mixture of annotations and incorrect guesses are present', () => {
+describe('When a mixture of annotations, correct, and incorrect guesses are present', () => {
   const annotations = buildAnnotations(10, 10);
 
   annotations.get('1,1').annotation = 'A';
@@ -76,6 +76,6 @@ describe('When a mixture of annotations and incorrect guesses are present', () =
   annotations.get('1,7').annotation = AnnotationDisplayString.reflectTop;
 
   it('should return expected score', () => {
-    expect(calculateScore(annotations, 1)).toEqual(12);
+    expect(calculateScore(annotations, 4, 2, 1)).toEqual(22);
   });
 });

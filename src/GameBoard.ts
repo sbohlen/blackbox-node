@@ -168,6 +168,8 @@ export class GameBoard {
     stats.incorrectGuessCount = incorrectGuessCount(this.GameGrid);
     stats.score = calculateScore(
       this.GridAnnotations,
+      this.atomCount,
+      stats.correctGuessCount,
       stats.incorrectGuessCount,
     );
 
