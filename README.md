@@ -12,7 +12,7 @@ The only dependency (beyond those included in the project/code itself) is that o
 
 The project itself has a dependency upon the TypeScript language compiler, but this dependency will be resolved by the `npm` package manager during the steps in the [How-To-Run](#How-to-Run) or [Running Tests](#Running-Tests) sections. TypeScript has been specified as an `npm` package dependency so that it will not conflict with any other pre-installed versions of TypeScript on your system.
 
-In the event of targeting a significantly earlier version of node.js, it may be necessary to adjust the TypeScript transpiler targeting to produce an earlier version of Javascript as identified in the [Typescript and JavaScript compatibility](Typescript-and-JavaScript-compatibility) section of this doc.
+In the event of targeting a significantly earlier version of node.js, it may be necessary to adjust the TypeScript transpiler targeting to produce an earlier version of Javascript as identified in the [Typescript and JavaScript compatibility](#Typescript-and-JavaScript-compatibility) section of this doc.
 
 ### Typescript and JavaScript compatibility
 
@@ -20,7 +20,7 @@ This project is configured to transpile the TypeScript source files into ECMAscr
 
 ### How-to-Run
 
-1. install node.js (see above for node runtime compatibility guidance)
+1. install node.js (see [Dependencies](#Dependencies) for node runtime compatibility guidance)
 1. clone this repo
 1. from the root of the repo, run the command `npm install` to hydrate all required package dependencies
 1. from the root of the repo, run the command `npm start` to transpile the TypeScript to Javascript and start the app
@@ -29,7 +29,7 @@ The app itself is menu-driven and should be (largely!) self-explanatory in re: h
 
 ### Running Tests
 
-1. install node.js (see above for node runtime compatibility guidance)
+1. install node.js (see [Dependencies](#Dependencies) for node runtime compatibility guidance)
 1. clone this repo
 1. from the root of the repo, run the command `npm install` to hydrate all required package dependencies
 1. run one of the following commands as appropriate:
